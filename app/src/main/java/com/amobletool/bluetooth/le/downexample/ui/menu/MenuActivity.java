@@ -30,7 +30,6 @@ import com.amobletool.bluetooth.le.downexample.ui.assign.AssignFragment;
 import com.amobletool.bluetooth.le.downexample.ui.set.SetFragment;
 import com.amobletool.bluetooth.le.downexample.ui.show.ShowFragment;
 import com.kaopiz.kprogresshud.KProgressHUD;
-import com.tencent.bugly.crashreport.CrashReport;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionListener;
 import com.yanzhenjie.permission.Rationale;
@@ -129,10 +128,6 @@ public class MenuActivity extends MVPBaseActivity<MenuContract.View, MenuPresent
             Toast.makeText(MenuActivity.this, (String) msg, Toast.LENGTH_SHORT).show();
         } else if ("Save6Data".equals(type)) {
             Toast.makeText(MenuActivity.this, (String) msg, Toast.LENGTH_SHORT).show();
-        } else if ("Save6DataSuccess".equals(type)) {
-            MyApp.getInstance().writeCharacteristic6("AA0A020100000000000000000000000000000200");
-            Log.d("ZM", "接收完成: " + System.currentTimeMillis());
-            Toast.makeText(MenuActivity.this, (String) msg, Toast.LENGTH_SHORT).show();
         } else if ("LWHData".equals(type)) {
             LWHData lwhData = (LWHData) msg;
             mTvH.setText("H:" + lwhData.H);
@@ -146,6 +141,21 @@ public class MenuActivity extends MVPBaseActivity<MenuContract.View, MenuPresent
                 kProgressHUD.dismiss();
             }
 
+        }
+
+    }
+
+    /**
+     *  修复高版本蓝牙数据传输问题
+     * @param msgEvent
+     */
+    @Subscribe(threadMode = ThreadMode.ASYNC)
+    public void onEventAsync(MsgEvent msgEvent) {
+        String type = msgEvent.getType();
+        Object msg = msgEvent.getMsg();
+        if ("Save6DataSuccess".equals(type)) {
+            MyApp.getInstance().writeCharacteristic6("AA0A020100000000000000000000000000000200");
+            Log.d("ZM", "接收完成: " + System.currentTimeMillis());
         }
 
     }
