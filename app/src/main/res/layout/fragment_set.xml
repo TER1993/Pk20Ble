@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <Button
+                android:id="@+id/btn_setTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/set_time" />
+
+
+            <Button
+                android:visibility="gone"
+                android:id="@+id/btn_ziku"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="设置字库" />
+
+            <Button
+                android:visibility="gone"
+                android:id="@+id/btn_clean"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="清除流程" />
+
+            <Button
+                android:id="@+id/btn_clean_flash"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/set_flash" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/set_tv_worker" />
+
+            <EditText
+                android:id="@+id/et_worker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <Button
+                android:id="@+id/btn_worker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/set_worker" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/set_tv_logo" />
+
+            <EditText
+                android:id="@+id/et_logo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <Button
+                android:id="@+id/btn_logo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/set_logo" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/set_tv_bili" />
+
+            <EditText
+                android:id="@+id/et_bili"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number" />
+
+            <Button
+                android:id="@+id/btn_bili"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/set_bili" />
+
+            <TextView
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="设置体积重最小值（小于100）" />
+
+            <EditText
+                android:visibility="gone"
+                android:id="@+id/et_bili_least"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number" />
+
+            <Button
+                android:visibility="gone"
+                android:id="@+id/btn_bili_least"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="设置体积重最小值" />
+
+            <TextView
+                android:id="@+id/tv_version"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
