@@ -134,6 +134,7 @@ public class ShowFragment extends MVPBaseFragment<ShowContract.View, ShowPresent
     @Override
     public void onResume() {
         super.onResume();
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
