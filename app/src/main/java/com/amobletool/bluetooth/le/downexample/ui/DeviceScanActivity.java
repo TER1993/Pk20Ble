@@ -178,7 +178,9 @@ public class DeviceScanActivity extends ListActivity {
     protected void onListItemClick(ListView l, View v, int position, long id) {
         System.out.println("==position==" + position);
         final BluetoothDevice device = mLeDeviceListAdapter.getDevice(position);
-        if (device == null) return;
+        if (device == null) {
+            return;
+        }
 //        final Intent intent = new Intent(this, DeviceControlActivity.class);
 //        intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_NAME, device.getName());
 //        intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());
@@ -270,14 +272,16 @@ public class DeviceScanActivity extends ListActivity {
                 viewHolder = (ViewHolder) view.getTag();
             }
 
-            BluetoothDevice device = mLeDevices.get(i);
-            final String deviceName = device.getName();
-            if (deviceName != null && deviceName.length() > 0)
-                viewHolder.deviceName.setText(deviceName);
-            else
-                viewHolder.deviceName.setText(R.string.unknown_device);
-            viewHolder.deviceAddress.setText(device.getAddress());
-
+            if (mLeDevices.size() > i) {
+                BluetoothDevice device = mLeDevices.get(i);
+                final String deviceName = device.getName();
+                if (deviceName != null && deviceName.length() > 0) {
+                    viewHolder.deviceName.setText(deviceName);
+                }else{
+                    viewHolder.deviceName.setText(R.string.unknown_device);
+                }
+                viewHolder.deviceAddress.setText(device.getAddress());
+            }
             return view;
         }
     }
