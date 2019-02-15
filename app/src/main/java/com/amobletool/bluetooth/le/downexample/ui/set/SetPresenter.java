@@ -19,7 +19,6 @@ import java.util.TimerTask;
 import speedata.com.blelib.bean.ZiKuData;
 import speedata.com.blelib.utils.PK20Utils;
 
-import static com.amobletool.bluetooth.le.downexample.MyApp.cn;
 import static com.amobletool.bluetooth.le.downexample.MyApp.mNotifyCharacteristic3;
 
 
@@ -41,6 +40,7 @@ public class SetPresenter extends BasePresenterImpl<SetContract.View> implements
                 }
             });
         } else {
+            boolean cn = MyApp.getInstance().getResources().getConfiguration().locale.getCountry().equals("CN");
             if (cn) {
                 EventBus.getDefault().post(new MsgEvent("Notification", "请连接设备"));
             } else {
@@ -54,12 +54,14 @@ public class SetPresenter extends BasePresenterImpl<SetContract.View> implements
     //检验返回的数据
     private void seeResult(int jiaoYanData) {
         if (jiaoYanData == 0) {
+            boolean cn = MyApp.getInstance().getResources().getConfiguration().locale.getCountry().equals("CN");
             if (cn) {
                 EventBus.getDefault().post(new MsgEvent("Notification", "成功"));
             } else {
                 EventBus.getDefault().post(new MsgEvent("Notification", "Success"));
             }
         } else {
+            boolean cn = MyApp.getInstance().getResources().getConfiguration().locale.getCountry().equals("CN");
             if (cn) {
                 EventBus.getDefault().post(new MsgEvent("Notification", "失败"));
             } else {
@@ -119,6 +121,7 @@ public class SetPresenter extends BasePresenterImpl<SetContract.View> implements
             int parseInt = Integer.parseInt(s);
             String setRatioData = PK20Utils.getSetRatioData(parseInt);
             if (TextUtils.isEmpty(setRatioData)) {
+                boolean cn = MyApp.getInstance().getResources().getConfiguration().locale.getCountry().equals("CN");
                 if (cn) {
                     EventBus.getDefault().post(new MsgEvent("Notification", "请输入有效比例"));
                 } else {
@@ -136,6 +139,7 @@ public class SetPresenter extends BasePresenterImpl<SetContract.View> implements
                     }
                 });
             } else {
+                boolean cn = MyApp.getInstance().getResources().getConfiguration().locale.getCountry().equals("CN");
                 if (cn) {
                     EventBus.getDefault().post(new MsgEvent("Notification", "请连接设备"));
                 } else {
@@ -144,6 +148,7 @@ public class SetPresenter extends BasePresenterImpl<SetContract.View> implements
             }
         } catch (NumberFormatException e) {
             e.printStackTrace();
+            boolean cn = MyApp.getInstance().getResources().getConfiguration().locale.getCountry().equals("CN");
             if (cn) {
                 EventBus.getDefault().post(new MsgEvent("Notification", "请输入有效比例"));
             } else {
@@ -174,6 +179,7 @@ public class SetPresenter extends BasePresenterImpl<SetContract.View> implements
                                 public void run() {
                                     SystemClock.sleep(50);
                                     if (count > 5) {
+                                        boolean cn = MyApp.getInstance().getResources().getConfiguration().locale.getCountry().equals("CN");
                                         if (cn) {
                                             EventBus.getDefault().post(new MsgEvent("Notification", "失败次数过多，请检查设备状态"));
                                         } else {
@@ -199,6 +205,7 @@ public class SetPresenter extends BasePresenterImpl<SetContract.View> implements
                                                     progressDialog.cancel();
                                                 }
                                             });
+                                            boolean cn = MyApp.getInstance().getResources().getConfiguration().locale.getCountry().equals("CN");
                                             if (cn) {
                                                 EventBus.getDefault().post(new MsgEvent("Notification", "设置成功"));
                                             } else {
@@ -218,6 +225,7 @@ public class SetPresenter extends BasePresenterImpl<SetContract.View> implements
             }).start();
 
         } else {
+            boolean cn = MyApp.getInstance().getResources().getConfiguration().locale.getCountry().equals("CN");
             if (cn) {
                 EventBus.getDefault().post(new MsgEvent("Notification", "请连接设备"));
             } else {
@@ -240,6 +248,7 @@ public class SetPresenter extends BasePresenterImpl<SetContract.View> implements
                 }
             });
         } else {
+            boolean cn = MyApp.getInstance().getResources().getConfiguration().locale.getCountry().equals("CN");
             if (cn) {
                 EventBus.getDefault().post(new MsgEvent("Notification", "请连接设备"));
             } else {
@@ -274,6 +283,7 @@ public class SetPresenter extends BasePresenterImpl<SetContract.View> implements
                                                 progressDialog.cancel();
                                             }
                                         });
+                                        boolean cn = MyApp.getInstance().getResources().getConfiguration().locale.getCountry().equals("CN");
                                         if (cn) {
                                             EventBus.getDefault().post(new MsgEvent("Notification", "失败次数过多，请检查设备状态"));
                                         } else {
@@ -292,6 +302,7 @@ public class SetPresenter extends BasePresenterImpl<SetContract.View> implements
                                                     progressDialog.cancel();
                                                 }
                                             });
+                                            boolean cn = MyApp.getInstance().getResources().getConfiguration().locale.getCountry().equals("CN");
                                             if (cn) {
                                                 EventBus.getDefault().post(new MsgEvent("Notification", "设置成功"));
                                             } else {
@@ -310,6 +321,7 @@ public class SetPresenter extends BasePresenterImpl<SetContract.View> implements
             }).start();
 
         } else {
+            boolean cn = MyApp.getInstance().getResources().getConfiguration().locale.getCountry().equals("CN");
             if (cn) {
                 EventBus.getDefault().post(new MsgEvent("Notification", "请连接设备"));
             } else {
@@ -353,6 +365,7 @@ public class SetPresenter extends BasePresenterImpl<SetContract.View> implements
                                                 progressDialog.cancel();
                                             }
                                         });
+                                        boolean cn = MyApp.getInstance().getResources().getConfiguration().locale.getCountry().equals("CN");
                                         if (cn) {
                                             EventBus.getDefault().post(new MsgEvent("Notification", "失败次数过多，请检查设备状态"));
                                         } else {
@@ -371,6 +384,7 @@ public class SetPresenter extends BasePresenterImpl<SetContract.View> implements
                                                     progressDialog.cancel();
                                                 }
                                             });
+                                            boolean cn = MyApp.getInstance().getResources().getConfiguration().locale.getCountry().equals("CN");
                                             if (cn) {
                                                 EventBus.getDefault().post(new MsgEvent("Notification", "设置成功"));
                                             } else {
@@ -389,6 +403,7 @@ public class SetPresenter extends BasePresenterImpl<SetContract.View> implements
             }).start();
 
         } else {
+            boolean cn = MyApp.getInstance().getResources().getConfiguration().locale.getCountry().equals("CN");
             if (cn) {
                 EventBus.getDefault().post(new MsgEvent("Notification", "请连接设备"));
             } else {
@@ -411,6 +426,7 @@ public class SetPresenter extends BasePresenterImpl<SetContract.View> implements
                 }
             });
         } else {
+            boolean cn = MyApp.getInstance().getResources().getConfiguration().locale.getCountry().equals("CN");
             if (cn) {
                 EventBus.getDefault().post(new MsgEvent("Notification", "请连接设备"));
             } else {
@@ -424,6 +440,7 @@ public class SetPresenter extends BasePresenterImpl<SetContract.View> implements
         try {
             int parseInt = Integer.parseInt(s);
             if (parseInt > 10000) {
+                boolean cn = MyApp.getInstance().getResources().getConfiguration().locale.getCountry().equals("CN");
                 if (cn) {
                     EventBus.getDefault().post(new MsgEvent("Notification", "请输入有效比例"));
                 } else {
@@ -433,6 +450,7 @@ public class SetPresenter extends BasePresenterImpl<SetContract.View> implements
             }
             String setRatioData = PK20Utils.getSetLeastRatioData(parseInt);
             if (TextUtils.isEmpty(setRatioData)) {
+                boolean cn = MyApp.getInstance().getResources().getConfiguration().locale.getCountry().equals("CN");
                 if (cn) {
                     EventBus.getDefault().post(new MsgEvent("Notification", "请输入有效比例"));
                 } else {
@@ -450,6 +468,7 @@ public class SetPresenter extends BasePresenterImpl<SetContract.View> implements
                     }
                 });
             } else {
+                boolean cn = MyApp.getInstance().getResources().getConfiguration().locale.getCountry().equals("CN");
                 if (cn) {
                     EventBus.getDefault().post(new MsgEvent("Notification", "请连接设备"));
                 } else {
@@ -458,6 +477,7 @@ public class SetPresenter extends BasePresenterImpl<SetContract.View> implements
             }
         } catch (NumberFormatException e) {
             e.printStackTrace();
+            boolean cn = MyApp.getInstance().getResources().getConfiguration().locale.getCountry().equals("CN");
             if (cn) {
                 EventBus.getDefault().post(new MsgEvent("Notification", "请输入有效比例"));
             } else {

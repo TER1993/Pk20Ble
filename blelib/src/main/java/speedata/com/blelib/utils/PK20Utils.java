@@ -1,6 +1,7 @@
 package speedata.com.blelib.utils;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
@@ -27,6 +28,7 @@ public class PK20Utils {
         String[] split = format.split(" ");
         String[] spHMS = split[1].split(":");
         String[] spYMD = split[0].split("-");
+        Log.d("yanshuai", split[2]);
         String week = DataManageUtils.backWeek(split[2]);
         String year = spYMD[0].substring(2, 4);
         String jiaoYan = DataManageUtils.getJiaoYan(spHMS[2], year);

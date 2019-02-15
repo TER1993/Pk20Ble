@@ -1,6 +1,7 @@
 package com.amobletool.bluetooth.le.downexample.ui.set;
 
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -23,10 +24,14 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Objects;
 
 import speedata.com.blelib.utils.StringUtils;
 
 
+/**
+ * @author xuyan
+ */
 public class SetFragment extends MVPBaseFragment<SetContract.View, SetPresenter>
         implements SetContract.View, View.OnClickListener {
 
@@ -55,7 +60,7 @@ public class SetFragment extends MVPBaseFragment<SetContract.View, SetPresenter>
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         View view = getView();
-        initView(view);
+        initView(Objects.requireNonNull(view));
     }
 
     @Override
@@ -83,6 +88,7 @@ public class SetFragment extends MVPBaseFragment<SetContract.View, SetPresenter>
         EventBus.getDefault().unregister(this);
     }
 
+    @SuppressLint("SetTextI18n")
     private void initView(View view) {
         btn_setTime = (Button) view.findViewById(R.id.btn_setTime);
         btn_setTime.setOnClickListener(this);
@@ -110,7 +116,8 @@ public class SetFragment extends MVPBaseFragment<SetContract.View, SetPresenter>
 
     @Override
     public void onClick(View v) {
-        boolean cn = getActivity().getResources().getConfiguration().locale.getCountry().equals("CN");
+
+
         switch (v.getId()) {
             case R.id.btn_setTime:
                 mPresenter.setTime();
@@ -118,8 +125,9 @@ public class SetFragment extends MVPBaseFragment<SetContract.View, SetPresenter>
             case R.id.btn_bili:
                 mPresenter.setBili(et_bili.getText().toString());
                 break;
-            case R.id.btn_ziku:
+            case R.id.btn_ziku: {
                 progressDialog = new ProgressDialog(getActivity());
+                boolean cn = getActivity().getApplicationContext().getResources().getConfiguration().locale.getCountry().equals("CN");
                 if (cn) {
                     progressDialog.setMessage("设置中...");
                 } else {
@@ -128,13 +136,15 @@ public class SetFragment extends MVPBaseFragment<SetContract.View, SetPresenter>
                 progressDialog.setCancelable(false);
                 progressDialog.show();
                 mPresenter.setZiKu(getActivity(), progressDialog);
+            }
                 break;
             case R.id.btn_clean:
                 mPresenter.setClean();
                 break;
-            case R.id.btn_logo:
+            case R.id.btn_logo: {
                 String logo = et_logo.getText().toString();
                 boolean isSpecial = StringUtils.isSpecial(logo);
+                boolean cn = getActivity().getApplicationContext().getResources().getConfiguration().locale.getCountry().equals("CN");
                 if (isSpecial) {
                     if (cn) {
                         Toast.makeText(getActivity(), "不能包含特殊符号", Toast.LENGTH_LONG).show();
@@ -184,11 +194,13 @@ public class SetFragment extends MVPBaseFragment<SetContract.View, SetPresenter>
                 progressDialog.setCancelable(false);
                 progressDialog.show();
                 mPresenter.setLogo(getActivity(), progressDialog, logo);
-                break;
+            }
+            break;
 
-            case R.id.btn_worker:
+            case R.id.btn_worker: {
                 String worker = et_worker.getText().toString();
                 boolean workerIsSpecial = StringUtils.isSpecial(worker);
+                boolean cn = getActivity().getApplicationContext().getResources().getConfiguration().locale.getCountry().equals("CN");
                 if (workerIsSpecial) {
                     if (cn) {
                         Toast.makeText(getActivity(), "不能包含特殊符号", Toast.LENGTH_LONG).show();
@@ -239,11 +251,13 @@ public class SetFragment extends MVPBaseFragment<SetContract.View, SetPresenter>
                 progressDialog.setCancelable(false);
                 progressDialog.show();
                 mPresenter.setWorkerName(getActivity(), progressDialog, worker);
+            }
                 break;
 
-            case R.id.btn_clean_flash:
+            case R.id.btn_clean_flash: {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 final EditText editText = new EditText(getActivity());
+                boolean cn = getActivity().getApplicationContext().getResources().getConfiguration().locale.getCountry().equals("CN");
                 builder.setView(editText);
                 if (cn) {
                     builder.setMessage("输入密码");
@@ -288,9 +302,12 @@ public class SetFragment extends MVPBaseFragment<SetContract.View, SetPresenter>
                 }
                 alertDialog = builder.create();
                 alertDialog.show();
+            }
                 break;
             case R.id.btn_bili_least:
                 mPresenter.setLeastBili(et_bili_least.getText().toString());
+                break;
+            default:
                 break;
         }
     }

@@ -484,6 +484,28 @@ public class DataManageUtils {
             case "周六":
                 result = "06";
                 break;
+            case "Sun":
+                result = "00";
+                break;
+            case "Mon":
+                result = "01";
+                break;
+            case "Tue":
+                result = "02";
+                break;
+            case "Wed":
+                result = "03";
+                break;
+            case "Thur":
+                result = "04";
+                break;
+            case "Fri":
+                result = "05";
+                break;
+            case "Sat":
+                result = "06";
+                break;
+
         }
         return result;
     }
