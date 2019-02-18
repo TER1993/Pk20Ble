@@ -28,8 +28,6 @@ import java.util.List;
 
 import xyz.reginer.baseadapter.CommonRvAdapter;
 
-import static com.amobletool.bluetooth.le.downexample.MyApp.cn;
-
 
 public class ShowFragment extends MVPBaseFragment<ShowContract.View, ShowPresenter>
         implements ShowContract.View, CommonRvAdapter.OnItemClickListener {
@@ -70,10 +68,11 @@ public class ShowFragment extends MVPBaseFragment<ShowContract.View, ShowPresent
             @Override
             public void onClick(View v) {
                 if (datas.size() == 0) {
+                    boolean cn = getActivity().getApplicationContext().getResources().getConfiguration().locale.getCountry().equals("CN");
                     if (cn) {
                         Toast.makeText(getActivity(), "无数据上传", Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(getActivity(), "Numerous uploaded", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "No data uploaded", Toast.LENGTH_SHORT).show();
                     }
 
                     return;
