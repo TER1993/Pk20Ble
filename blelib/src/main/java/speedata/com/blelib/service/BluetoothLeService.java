@@ -202,9 +202,9 @@ public class BluetoothLeService extends Service {
                 if (jiaoYan6 != 0) {
                     boolean cn = BluetoothLeService.this.getResources().getConfiguration().locale.getCountry().equals("CN");
                     if (cn) {
-                        intent.putExtra(NOTIFICATION_DATA_ERR, "ERROR");
-                    } else {
                         intent.putExtra(NOTIFICATION_DATA_ERR, "信道6数据有误");
+                    } else {
+                        intent.putExtra(NOTIFICATION_DATA_ERR, "ERROR");
                     }
                     sendBroadcast(intent);
                     return;
@@ -256,9 +256,9 @@ public class BluetoothLeService extends Service {
 //                    BaseBleApplication.wri
                     boolean cn = BluetoothLeService.this.getResources().getConfiguration().locale.getCountry().equals("CN");
                     if (cn) {
-                        intent.putExtra(NOTIFICATION_DATA_ERR, "ERROR");
-                    } else {
                         intent.putExtra(NOTIFICATION_DATA_ERR, "信道6数据部分重发");
+                    } else {
+                        intent.putExtra(NOTIFICATION_DATA_ERR, "ERROR");
                     }
                     sendBroadcast(intent);
                 }

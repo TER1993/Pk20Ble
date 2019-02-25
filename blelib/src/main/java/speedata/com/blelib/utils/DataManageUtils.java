@@ -341,12 +341,17 @@ public class DataManageUtils {
         int skip = 0;
         for (int index = start; index <= searched.length - find.length; ++index) {
             matched = true;
-            if (find[0] != searched[index] || find[end] != searched[index + end]) continue;
-            else skip++;
+            if (find[0] != searched[index] || find[end] != searched[index + end]) {
+                continue;
+            } else {
+                skip++;
+            }
             if (end > 10)
-                if (find[skip] != searched[index + skip] || find[end - skip] != searched[index + end - skip])
+                if (find[skip] != searched[index + skip] || find[end - skip] != searched[index + end - skip]) {
                     continue;
-                else skip++;
+                } else {
+                    skip++;
+                }
             for (int subIndex = skip; subIndex < find.length - skip; ++subIndex) {
                 if (find[subIndex] != searched[index + subIndex]) {
                     matched = false;
@@ -368,23 +373,25 @@ public class DataManageUtils {
         while (true) {
             int m = n / 16;
             int k = n % 16;
-            if (k == 15)
+            if (k == 15) {
                 ch[nIndex] = 'F';
-            else if (k == 14)
+            } else if (k == 14) {
                 ch[nIndex] = 'E';
-            else if (k == 13)
+            } else if (k == 13) {
                 ch[nIndex] = 'D';
-            else if (k == 12)
+            } else if (k == 12) {
                 ch[nIndex] = 'C';
-            else if (k == 11)
+            } else if (k == 11) {
                 ch[nIndex] = 'B';
-            else if (k == 10)
+            } else if (k == 10) {
                 ch[nIndex] = 'A';
-            else
+            } else {
                 ch[nIndex] = (char) ('0' + k);
+            }
             nIndex++;
-            if (m == 0)
+            if (m == 0) {
                 break;
+            }
             n = m;
         }
         StringBuffer sb = new StringBuffer();
@@ -430,10 +437,12 @@ public class DataManageUtils {
 
     //计算幂
     public static int GetPower(int nValue, int nCount) throws Exception {
-        if (nCount < 0)
+        if (nCount < 0) {
             throw new Exception("nCount can't small than 1!");
-        if (nCount == 0)
+        }
+        if (nCount == 0) {
             return 1;
+        }
         int nSum = 1;
         for (int i = 0; i < nCount; ++i) {
             nSum = nSum * nValue;
@@ -451,8 +460,9 @@ public class DataManageUtils {
         }
         for (; i < strHex.length(); ++i) {
             char ch = strHex.charAt(i);
-            if ((ch >= '0' && ch <= '9') || (ch >= 'A' && ch <= 'F') || (ch >= 'a' && ch <= 'f'))
+            if ((ch >= '0' && ch <= '9') || (ch >= 'A' && ch <= 'F') || (ch >= 'a' && ch <= 'f')) {
                 continue;
+            }
             return false;
         }
         return true;
@@ -504,6 +514,8 @@ public class DataManageUtils {
                 break;
             case "Sat":
                 result = "06";
+                break;
+            default:
                 break;
 
         }
@@ -793,7 +805,9 @@ public class DataManageUtils {
 //                inputStream.read(frameBuffer, offset, frameBuffer.length);
                 inputStream.read(frameBuffer);
             }
-            inputStream.close();
+            if (inputStream != null) {
+                inputStream.close();
+            }
         } catch (FileNotFoundException fileNotFoundException) {
             fileNotFoundException.printStackTrace();
         } catch (IOException iOException) {
@@ -822,7 +836,9 @@ public class DataManageUtils {
             if (inputStream != null) {
                 inputStream.read(frameBuffer);
             }
-            inputStream.close();
+            if (inputStream != null) {
+                inputStream.close();
+            }
         } catch (FileNotFoundException fileNotFoundException) {
             fileNotFoundException.printStackTrace();
         } catch (IOException iOException) {

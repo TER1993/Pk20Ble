@@ -1,5 +1,6 @@
 package speedata.com.blelib.base;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGattCharacteristic;
@@ -113,6 +114,7 @@ public class BaseBleApplication extends Application {
     };
 
 
+    @SuppressLint("NewApi")
     public void writeCharacteristic3(String s) {
         if (mNotifyCharacteristic3 != null) {
             byte[] data = DataManageUtils.HexString2Bytes(s);//转十六进制
@@ -121,6 +123,7 @@ public class BaseBleApplication extends Application {
         }
     }
 
+    @SuppressLint("NewApi")
     public void writeCharacteristic6(String s) {
         if (mNotifyCharacteristic6 != null) {
             byte[] data = DataManageUtils.HexString2Bytes(s);//转十六进制
@@ -187,6 +190,7 @@ public class BaseBleApplication extends Application {
         return intentFilter;
     }
 
+    @SuppressLint("NewApi")
     public void displayGattServices(List<BluetoothGattService> gattServices) {
         if (gattServices == null) {
             return;

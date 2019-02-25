@@ -1,12 +1,15 @@
 package speedata.com.blelib.utils;
 
+import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGattCharacteristic;
 
 import speedata.com.blelib.service.BluetoothLeService;
 
 /**
- * Created by 张明_ on 2017/9/5.
+ *
+ * @author 张明_
+ * @date 2017/9/5
  */
 
 public class BleServiceMethod {
@@ -23,6 +26,7 @@ public class BleServiceMethod {
         this.device = device;
     }
 
+    @SuppressLint("NewApi")
     public void writeCharacteristic3(String s) {
         if (mNotifyCharacteristic3 != null) {
             byte[] data = DataManageUtils.HexString2Bytes(s);//转十六进制
@@ -31,6 +35,7 @@ public class BleServiceMethod {
         }
     }
 
+    @SuppressLint("NewApi")
     public void writeCharacteristic6(String s) {
         if (mNotifyCharacteristic6 != null) {
             byte[] data = DataManageUtils.HexString2Bytes(s);//转十六进制
