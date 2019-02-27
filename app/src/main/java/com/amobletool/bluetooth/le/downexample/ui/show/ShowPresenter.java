@@ -26,8 +26,6 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import static com.amobletool.bluetooth.le.downexample.MyApp.cn;
-
 
 public class ShowPresenter extends BasePresenterImpl<ShowContract.View> implements ShowContract.Presenter {
     public final String BASE_URL = "http://218.247.237.138:8078";
@@ -82,6 +80,7 @@ public class ShowPresenter extends BasePresenterImpl<ShowContract.View> implemen
                         if ("{\"Message\":\"Success\",\"Result\":0}".equals(result)) {
                             MyApp.getDaoInstant().getDataDao().deleteInTx(datas);
                             if (mView != null) {
+                                boolean cn = MyApp.getInstance().getResources().getConfiguration().locale.getCountry().equals("CN");
                                 if (cn) {
                                     mView.showToast("上传成功！");
                                 } else {
@@ -101,6 +100,7 @@ public class ShowPresenter extends BasePresenterImpl<ShowContract.View> implemen
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
                     Log.d("ZM", "onFailure: " + t.toString());
                     if (mView != null) {
+                        boolean cn = MyApp.getInstance().getResources().getConfiguration().locale.getCountry().equals("CN");
                         if (cn) {
                             mView.showToast("上传失败：" + t.toString());
                         } else {
