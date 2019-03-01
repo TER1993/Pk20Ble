@@ -506,7 +506,7 @@ public class DataManageUtils {
             case "Wed":
                 result = "03";
                 break;
-            case "Thur":
+            case "Thu":
                 result = "04";
                 break;
             case "Fri":
