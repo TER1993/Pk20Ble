@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 25
+    compileSdkVersion 28
     buildToolsVersion '28.0.3'
 
     defaultConfig {
@@ -19,6 +19,24 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    task makeJar(type: Copy) {
+        //删除存在的
+        delete 'build/libs/PK20_V1.0.jar'
+        //设置拷贝的文件
+        from('build/intermediates/bundles/debug/')
+        //打进jar包后的文件目录
+        into('build/libs/')
+        //将classes.jar放入build/libs/目录下
+        //include ,exclude参数来设置过滤
+        //（我们只关心classes.jar这个文件）
+        include('classes.jar')
+        //重命名
+        rename ('classes.jar', 'PK20_V1.0.jar')
+    }
+
+    makeJar.dependsOn(build)
+
 }
 
 dependencies {
