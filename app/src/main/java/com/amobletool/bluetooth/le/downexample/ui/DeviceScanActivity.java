@@ -46,8 +46,11 @@ import android.widget.Toast;
 
 import com.amobletool.bluetooth.le.R;
 import com.amobletool.bluetooth.le.downexample.MyApp;
+import com.scandecode.ScanDecode;
+import com.scandecode.inf.ScanInterface;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Activity for scanning and displaying available Bluetooth LE devices.
@@ -65,6 +68,9 @@ public class DeviceScanActivity extends ListActivity {
     private static final long SCAN_PERIOD = 10000;
     private BluetoothLeScanner mBluetoothLeScanner;
     private static final int REQUEST_CODE_ACCESS_COARSE_LOCATION = 1;
+
+    private ScanInterface scanDecode;
+    private List<BluetoothDevice> mList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -105,7 +111,35 @@ public class DeviceScanActivity extends ListActivity {
                         REQUEST_CODE_ACCESS_COARSE_LOCATION);
             }
         }
+
+        scanDecode = new ScanDecode(this);
+        scanDecode.initService("true");
+        scanDecode.getBarCode(new ScanInterface.OnScanListener() {
+            @Override
+            public void getBarcode(String s) {
+                mList = mLeDeviceListAdapter.mLeDevices;
+
+                for (int i = 0; i < mList.size(); i++) {
+                    if (mList.get(i).getAddress().equals(s)){
+                        if (mScanning) {
+                            mBluetoothLeScanner.stopScan(mScanCallback);
+                            mScanning = false;
+                        }
+                        MyApp.getInstance().getDeviceName(mList.get(i));
+                        finish();
+                    }
+                }
+
+            }
+
+            @Override
+            public void getBarcodeByte(byte[] bytes) {
+
+            }
+        });
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -330,4 +364,6 @@ public class DeviceScanActivity extends ListActivity {
         TextView deviceName;
         TextView deviceAddress;
     }
+
+
 }

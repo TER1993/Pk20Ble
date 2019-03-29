@@ -35,16 +35,20 @@ dependencies {
     implementation 'org.greenrobot:eventbus:3.1.1'
     implementation 'org.greenrobot:greendao:3.2.2'
     implementation project(':blelib')
-    implementation 'com.squareup.retrofit2:retrofit:2.4.0'//retrofit
-    implementation 'com.google.code.gson:gson:2.8.5'//Gson 库
+    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
+    //retrofit
+    implementation 'com.google.code.gson:gson:2.8.5'
+    //Gson 库
     //下面两个是RxJava 和RxAndroid
     implementation 'io.reactivex:rxjava:1.1.5'
     implementation 'io.reactivex:rxandroid:1.1.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.4.0'//转换器，请求结果转换成Model
-    implementation 'com.squareup.retrofit2:adapter-rxjava:2.1.0'//配合Rxjava 使用
+    implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
+    //转换器，请求结果转换成Model
+    implementation 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
+    //配合Rxjava 使用
     implementation 'com.kaopiz:kprogresshud:1.1.0'
     //6.0权限添加三方库
     implementation 'com.yanzhenjie:permission:1.1.2'
-
     implementation 'com.tencent.bugly:crashreport:2.6.6.1'
+    implementation files('libs/classes.jar')
 }
