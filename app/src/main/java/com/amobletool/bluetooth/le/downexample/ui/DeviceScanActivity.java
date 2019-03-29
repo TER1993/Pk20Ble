@@ -126,18 +126,7 @@ public class DeviceScanActivity extends ListActivity {
             @Override
             public void getBarcode(String s) {
                 mList = mLeDeviceListAdapter.mLeDevices;
-
-                for (int i = 0; i < mList.size(); i++) {
-                    if (mList.get(i).getAddress().equals(s)) {
-                        if (mScanning) {
-                            mBluetoothLeScanner.stopScan(mScanCallback);
-                            mScanning = false;
-                        }
-                        MyApp.getInstance().getDeviceName(mList.get(i));
-                        finish();
-                    }
-                }
-
+                scanResult(s);
             }
 
             @Override
@@ -217,6 +206,7 @@ public class DeviceScanActivity extends ListActivity {
 
         if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CAMERA_SCAN) {
             s = data.getStringExtra(SCAN);
+            scanResult(s);
         }
 
     }
