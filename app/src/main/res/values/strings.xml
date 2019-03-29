@@ -22,7 +22,7 @@
     <string name="no_data">No data</string>
     <string name="connected">Connected</string>
     <string name="disconnected">Disconnected</string>
-    <string name="title_devices">BLE Device Scan</string>
+    <string name="title_devices">Device Scan</string>
     <string name="error_bluetooth_not_supported">Bluetooth not supported.</string>
 
     <string name="unknown_device">Unknown device</string>
@@ -62,5 +62,7 @@
     <string name="rv_12">VolumeWeight</string>
     <string name="rv_13">Identify</string>
     <string name="scan">Connection</string>
-
+    <string name="camera_scan">camera</string>
+    <string name="scan_barcode">scan barcode</string>
+    <string name="qrcode_text">The bar code can be scanned automatically by putting it in the box.</string>
 </resources>

@@ -14,6 +14,10 @@
      limitations under the License.
 -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/menu_camera"
+        android:title="@string/camera_scan"
+        android:orderInCategory="1"
+        android:showAsAction="ifRoom|withText"/>
     <item android:id="@+id/menu_refresh"
           android:checkable="false"
           android:orderInCategory="1"

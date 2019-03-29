@@ -46,6 +46,7 @@ import android.widget.Toast;
 
 import com.amobletool.bluetooth.le.R;
 import com.amobletool.bluetooth.le.downexample.MyApp;
+import com.amobletool.bluetooth.le.downexample.ui.scan.ScanActivity;
 import com.scandecode.ScanDecode;
 import com.scandecode.inf.ScanInterface;
 
@@ -64,6 +65,8 @@ public class DeviceScanActivity extends ListActivity {
     private Handler mHandler;
 
     private static final int REQUEST_ENABLE_BT = 1;
+    private static final int REQUEST_CAMERA_SCAN = 1001;
+    private static final String SCAN = "SCAN";
     // 10秒后停止查找搜索.
     private static final long SCAN_PERIOD = 10000;
     private BluetoothLeScanner mBluetoothLeScanner;
@@ -120,7 +123,7 @@ public class DeviceScanActivity extends ListActivity {
                 mList = mLeDeviceListAdapter.mLeDevices;
 
                 for (int i = 0; i < mList.size(); i++) {
-                    if (mList.get(i).getAddress().equals(s)){
+                    if (mList.get(i).getAddress().equals(s)) {
                         if (mScanning) {
                             mBluetoothLeScanner.stopScan(mScanCallback);
                             mScanning = false;
@@ -140,10 +143,10 @@ public class DeviceScanActivity extends ListActivity {
     }
 
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
+        menu.findItem(R.id.menu_camera).setVisible(true);
         if (!mScanning) {
             menu.findItem(R.id.menu_stop).setVisible(false);
             menu.findItem(R.id.menu_scan).setVisible(true);
@@ -166,6 +169,12 @@ public class DeviceScanActivity extends ListActivity {
                 break;
             case R.id.menu_stop:
                 scanLeDevice(false);
+                break;
+            case R.id.menu_camera:
+                //页面跳转
+                startActivityForResult(new Intent(DeviceScanActivity.this, ScanActivity.class), REQUEST_CAMERA_SCAN);
+                break;
+            default:
                 break;
         }
         return true;
@@ -191,12 +200,42 @@ public class DeviceScanActivity extends ListActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         // User chose not to enable Bluetooth.
         if (requestCode == REQUEST_ENABLE_BT && resultCode == Activity.RESULT_CANCELED) {
             finish();
             return;
         }
-        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CAMERA_SCAN) {
+            String s = data.getStringExtra(SCAN);
+
+            Handler handler = new Handler();
+            handler.postDelayed(() -> {
+                /*
+                 *要执行的操作
+                 */
+                scanResult(s);
+                //2秒后执行Runnable中的run方法,否则初始化失败
+            }, 2000);
+
+        }
+
+    }
+
+    private void scanResult(String s) {
+        mList = mLeDeviceListAdapter.mLeDevices;
+
+        for (int i = 0; i < mList.size(); i++) {
+            if (mList.get(i).getAddress().equals(s)) {
+                if (mScanning) {
+                    mBluetoothLeScanner.stopScan(mScanCallback);
+                    mScanning = false;
+                }
+                MyApp.getInstance().getDeviceName(mList.get(i));
+                finish();
+            }
+        }
     }
 
 
@@ -311,7 +350,7 @@ public class DeviceScanActivity extends ListActivity {
                 final String deviceName = device.getName();
                 if (deviceName != null && deviceName.length() > 0) {
                     viewHolder.deviceName.setText(deviceName);
-                }else{
+                } else {
                     viewHolder.deviceName.setText(R.string.unknown_device);
                 }
                 viewHolder.deviceAddress.setText(device.getAddress());

@@ -8,7 +8,7 @@
     <string name="no_data">无数据</string>
     <string name="connected">已连接</string>
     <string name="disconnected">已断开连接</string>
-    <string name="title_devices">BLE 设备扫描</string>
+    <string name="title_devices">设备扫描</string>
     <string name="error_bluetooth_not_supported">你的手机不支持蓝牙</string>
 
     <string name="unknown_device">未知设备</string>
@@ -48,4 +48,7 @@
     <string name="rv_12">体积重　</string>
     <string name="rv_13">标识位　</string>
     <string name="scan">连接设备</string>
+    <string name="camera_scan">摄像头</string>
+    <string name="scan_barcode">扫描条码</string>
+    <string name="qrcode_text">将二维码放入框内,\n即可自动扫描</string>
 </resources>
