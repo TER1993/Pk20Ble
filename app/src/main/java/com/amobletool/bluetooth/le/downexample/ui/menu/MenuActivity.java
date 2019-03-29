@@ -344,6 +344,7 @@ public class MenuActivity extends MVPBaseActivity<MenuContract.View, MenuPresent
                         , Manifest.permission.WRITE_EXTERNAL_STORAGE
                         , Manifest.permission.BLUETOOTH
                         , Manifest.permission.BLUETOOTH_ADMIN
+                        , Manifest.permission.CAMERA
                         , Manifest.permission.INTERNET)
                 .callback(listener)
                 .rationale(new RationaleListener() {

@@ -116,7 +116,12 @@ public class DeviceScanActivity extends ListActivity {
         }
 
         scanDecode = new ScanDecode(this);
-        scanDecode.initService("true");
+        try {
+            scanDecode.initService("true");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         scanDecode.getBarCode(new ScanInterface.OnScanListener() {
             @Override
             public void getBarcode(String s) {
@@ -193,10 +198,13 @@ public class DeviceScanActivity extends ListActivity {
         }
 
         // Initializes list view adapter.
+
         mLeDeviceListAdapter = new LeDeviceListAdapter();
         setListAdapter(mLeDeviceListAdapter);
         scanLeDevice(true);
     }
+
+    private String s;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -208,17 +216,7 @@ public class DeviceScanActivity extends ListActivity {
         }
 
         if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CAMERA_SCAN) {
-            String s = data.getStringExtra(SCAN);
-
-            Handler handler = new Handler();
-            handler.postDelayed(() -> {
-                /*
-                 *要执行的操作
-                 */
-                scanResult(s);
-                //2秒后执行Runnable中的run方法,否则初始化失败
-            }, 2000);
-
+            s = data.getStringExtra(SCAN);
         }
 
     }
@@ -227,7 +225,9 @@ public class DeviceScanActivity extends ListActivity {
         mList = mLeDeviceListAdapter.mLeDevices;
 
         for (int i = 0; i < mList.size(); i++) {
-            if (mList.get(i).getAddress().equals(s)) {
+            String s1 = mList.get(i).getAddress();
+            String s2 = s1.substring(s1.length() - 5).replaceAll("[[\\s-:punct:]]", "");
+            if (s2.equals(s)) {
                 if (mScanning) {
                     mBluetoothLeScanner.stopScan(mScanCallback);
                     mScanning = false;
@@ -364,12 +364,10 @@ public class DeviceScanActivity extends ListActivity {
 
         @Override
         public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    mLeDeviceListAdapter.addDevice(device);
-                    mLeDeviceListAdapter.notifyDataSetChanged();
-                }
+            runOnUiThread(() -> {
+                mLeDeviceListAdapter.addDevice(device);
+                mLeDeviceListAdapter.notifyDataSetChanged();
+                scanResult(s);
             });
         }
     };
@@ -381,6 +379,7 @@ public class DeviceScanActivity extends ListActivity {
             super.onScanResult(callbackType, result);
             mLeDeviceListAdapter.addDevice(result.getDevice());
             mLeDeviceListAdapter.notifyDataSetChanged();
+            scanResult(s);
         }
 
 //        @Override
@@ -404,5 +403,13 @@ public class DeviceScanActivity extends ListActivity {
         TextView deviceAddress;
     }
 
-
+    @Override
+    protected void onDestroy() {
+        try {
+            scanDecode.onDestroy();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        super.onDestroy();
+    }
 }
