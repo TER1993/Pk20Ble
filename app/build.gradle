@@ -13,8 +13,8 @@ android {
         applicationId "com.amobletool.bluetooth.le"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 6
-        versionName "1.7.17"
+        versionCode 7
+        versionName "1.7.18"
     }
     //greendao 配置版本号
     greendao{
