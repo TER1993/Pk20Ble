@@ -7,6 +7,7 @@ import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -111,11 +112,7 @@ public class MenuActivity extends MVPBaseActivity<MenuContract.View, MenuPresent
             Log.d("ZM_connect", "First:" + result);
 
             if (result) {
-                ll.setVisibility(View.VISIBLE);
-                Log.d("ZM_connect", "显示连接按键");
-                device_address.setText("Address：" + MyApp.address);
-                device_name.setText("Name：" + MyApp.name);
-                ivOn.setVisibility(View.VISIBLE);
+                initScanTime();
             } else {
                 ll.setVisibility(View.GONE);
                 Log.d("ZM_connect", "隐藏连接按键");
@@ -143,6 +140,22 @@ public class MenuActivity extends MVPBaseActivity<MenuContract.View, MenuPresent
 
         }
 
+    }
+
+
+    private void initScanTime() {
+
+        Handler handler = new Handler();
+        handler.postDelayed(() -> {
+            /**
+             *要执行的操作
+             */
+            ll.setVisibility(View.VISIBLE);
+            Log.d("ZM_connect", "显示连接按键");
+            device_address.setText("Address：" + MyApp.address);
+            device_name.setText("Name：" + MyApp.name);
+            ivOn.setVisibility(View.VISIBLE);
+        }, 1000); //1秒后执行Runnable中的run方法,否则初始化失败
     }
 
     /**

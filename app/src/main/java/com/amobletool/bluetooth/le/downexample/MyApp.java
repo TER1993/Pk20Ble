@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
@@ -15,8 +16,6 @@ import com.amobletool.bluetooth.le.downexample.bean.DaoMaster;
 import com.amobletool.bluetooth.le.downexample.bean.DaoSession;
 import com.amobletool.bluetooth.le.downexample.bean.Data;
 import com.amobletool.bluetooth.le.downexample.bean.MsgEvent;
-import com.amobletool.bluetooth.le.downexample.bean.Word;
-import com.amobletool.bluetooth.le.downexample.bean.WordDao;
 import com.tencent.bugly.crashreport.CrashReport;
 
 import org.greenrobot.eventbus.EventBus;
@@ -141,11 +140,19 @@ public class MyApp extends BaseBleApplication {
             if (ACTION_GATT_CONNECTED.equals(action)) {
                 EventBus.getDefault().post(new MsgEvent("KP", false));
                 boolean cn = getApplicationContext().getResources().getConfiguration().locale.getCountry().equals("CN");
-                if (cn) {
-                    Toast.makeText(getApplicationContext(), "已连接", Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(getApplicationContext(), "Connection", Toast.LENGTH_LONG).show();
-                }
+
+                Handler handler = new Handler();
+                handler.postDelayed(() -> {
+                    /**
+                     *要执行的操作
+                     */
+                    if (cn) {
+                        Toast.makeText(getApplicationContext(), "已连接", Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Connection", Toast.LENGTH_LONG).show();
+                    }
+                }, 1000); //1秒后执行Runnable中的run方法,否则初始化失败
+
                 EventBus.getDefault().post(new MsgEvent("ServiceConnectedStatus", true));
             } else if (ACTION_GATT_DISCONNECTED.equals(action)) {
                 EventBus.getDefault().post(new MsgEvent("ServiceConnectedStatus", false));
