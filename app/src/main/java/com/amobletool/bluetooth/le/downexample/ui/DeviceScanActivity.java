@@ -67,8 +67,8 @@ public class DeviceScanActivity extends ListActivity {
     private static final int REQUEST_ENABLE_BT = 1;
     private static final int REQUEST_CAMERA_SCAN = 1001;
     private static final String SCAN = "SCAN";
-    // 10秒后停止查找搜索.
-    private static final long SCAN_PERIOD = 10000;
+    // 5秒后停止查找搜索.
+    private static final long SCAN_PERIOD = 5000;
     private BluetoothLeScanner mBluetoothLeScanner;
     private static final int REQUEST_CODE_ACCESS_COARSE_LOCATION = 1;
 
@@ -125,8 +125,10 @@ public class DeviceScanActivity extends ListActivity {
         scanDecode.getBarCode(new ScanInterface.OnScanListener() {
             @Override
             public void getBarcode(String s) {
-                mList = mLeDeviceListAdapter.mLeDevices;
-                scanResult(s);
+                runOnUiThread(() -> {
+                    mList = mLeDeviceListAdapter.mLeDevices;
+                    scanResult(s);
+                });
             }
 
             @Override
@@ -134,6 +136,45 @@ public class DeviceScanActivity extends ListActivity {
 
             }
         });
+        s = getIntent().getStringExtra("SCAN");
+        if (s != null && s.length() == 4) {
+            getScan(s);
+            setScan(s);
+        }
+
+    }
+
+    private void setScan(String scan) {
+        Handler handler = new Handler();
+        handler.postDelayed(() -> {
+            /**
+             *要执行的操作
+             */
+            if (!stopscan) {
+                runOnUiThread(() -> {
+                mLeDeviceListAdapter.clear();
+                scanLeDevice(true);
+                getScan(scan);
+                    });
+            }
+
+        }, 6000); //0.1秒后执行Runnable中的run方法
+
+    }
+
+    private void getScan(String scan) {
+        Handler handler = new Handler();
+        handler.postDelayed(() -> {
+            /**
+             *要执行的操作
+             */
+            if (!stopscan) {
+                runOnUiThread(() -> {
+                    mLeDeviceListAdapter.notifyDataSetChanged();
+                    scanResult(scan);
+                });
+            }
+        }, 1000); //0.1秒后执行Runnable中的run方法
     }
 
 
@@ -191,6 +232,7 @@ public class DeviceScanActivity extends ListActivity {
         mLeDeviceListAdapter = new LeDeviceListAdapter();
         setListAdapter(mLeDeviceListAdapter);
         scanLeDevice(true);
+        stopscan = false;
     }
 
     private String s;
@@ -212,15 +254,14 @@ public class DeviceScanActivity extends ListActivity {
     }
 
     private void scanResult(String s) {
-        mList = mLeDeviceListAdapter.mLeDevices;
+        mList = mLeDeviceListAdapter.getmLeDevices();
 
         for (int i = 0; i < mList.size(); i++) {
             String s1 = mList.get(i).getAddress();
             String s2 = s1.substring(s1.length() - 5).replaceAll("[[\\s-:punct:]]", "");
             if (s2.equals(s)) {
                 if (mScanning) {
-                    mBluetoothLeScanner.stopScan(mScanCallback);
-                    mScanning = false;
+                    scanLeDevice(false);
                 }
                 MyApp.getInstance().getDeviceName(mList.get(i));
                 finish();
@@ -228,12 +269,14 @@ public class DeviceScanActivity extends ListActivity {
         }
     }
 
+    private boolean stopscan = true;
 
     @Override
     protected void onPause() {
         super.onPause();
         scanLeDevice(false);
         mLeDeviceListAdapter.clear();
+        stopscan = true;
     }
 
     //点击列表跳转到DeviceControlActivity
@@ -285,6 +328,14 @@ public class DeviceScanActivity extends ListActivity {
     private class LeDeviceListAdapter extends BaseAdapter {
         private ArrayList<BluetoothDevice> mLeDevices;
         private LayoutInflater mInflator;
+
+        public ArrayList<BluetoothDevice> getmLeDevices() {
+            return mLeDevices;
+        }
+
+        public void setmLeDevices(ArrayList<BluetoothDevice> mLeDevices) {
+            this.mLeDevices = mLeDevices;
+        }
 
         public LeDeviceListAdapter() {
             super();

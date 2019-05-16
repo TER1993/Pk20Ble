@@ -5,6 +5,7 @@ import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -31,6 +32,8 @@ import com.amobletool.bluetooth.le.downexample.ui.assign.AssignFragment;
 import com.amobletool.bluetooth.le.downexample.ui.set.SetFragment;
 import com.amobletool.bluetooth.le.downexample.ui.show.ShowFragment;
 import com.kaopiz.kprogresshud.KProgressHUD;
+import com.scandecode.ScanDecode;
+import com.scandecode.inf.ScanInterface;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionListener;
 import com.yanzhenjie.permission.Rationale;
@@ -63,6 +66,8 @@ public class MenuActivity extends MVPBaseActivity<MenuContract.View, MenuPresent
     private TextView mTvH;
     private KProgressHUD kProgressHUD;
 
+    private ScanInterface scanDecode;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,14 +84,42 @@ public class MenuActivity extends MVPBaseActivity<MenuContract.View, MenuPresent
 
         initView();
         openFragment(new ShowFragment());
+
+        scanDecode = new ScanDecode(this);
+        try {
+            scanDecode.initService("true");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        scanDecode.getBarCode(new ScanInterface.OnScanListener() {
+            @Override
+            public void getBarcode(String s) {
+                if (s.length() == 4 && ll.getVisibility() != View.VISIBLE && !stopscan) {
+                    startActivity(new Intent(MenuActivity.this, DeviceScanActivity.class).putExtra("SCAN", s));
+                }
+            }
+
+            @Override
+            public void getBarcodeByte(byte[] bytes) {
+
+            }
+        });
     }
 
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
+        try {
+            scanDecode.onDestroy();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         EventBus.getDefault().unregister(this);
+        super.onDestroy();
     }
+
+    private boolean stopscan = true;
 
     @Override
     protected void onResume() {
@@ -101,6 +134,13 @@ public class MenuActivity extends MVPBaseActivity<MenuContract.View, MenuPresent
                 openFragment(new SetFragment());
             }
         }
+        stopscan = false;
+    }
+
+    @Override
+    protected void onPause() {
+        stopscan = true;
+        super.onPause();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

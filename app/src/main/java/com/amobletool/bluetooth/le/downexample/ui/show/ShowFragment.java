@@ -2,6 +2,7 @@ package com.amobletool.bluetooth.le.downexample.ui.show;
 
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -133,7 +134,14 @@ public class ShowFragment extends MVPBaseFragment<ShowContract.View, ShowPresent
     @Override
     public void onResume() {
         super.onResume();
-        mAdapter.notifyDataSetChanged();
+        Handler handler = new Handler();
+        handler.postDelayed(() -> {
+            /**
+             *要执行的操作
+             */
+            mAdapter.notifyDataSetChanged();
+        }, 100); //0.1秒后执行Runnable中的run方法
+
     }
 
     @Override
