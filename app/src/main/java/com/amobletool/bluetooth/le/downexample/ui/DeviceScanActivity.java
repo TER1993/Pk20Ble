@@ -68,7 +68,7 @@ public class DeviceScanActivity extends ListActivity {
     private static final int REQUEST_CAMERA_SCAN = 1001;
     private static final String SCAN = "SCAN";
     // 5秒后停止查找搜索.
-    private static final long SCAN_PERIOD = 5000;
+    private static final long SCAN_PERIOD = 3000;
     private BluetoothLeScanner mBluetoothLeScanner;
     private static final int REQUEST_CODE_ACCESS_COARSE_LOCATION = 1;
 
@@ -125,10 +125,7 @@ public class DeviceScanActivity extends ListActivity {
         scanDecode.getBarCode(new ScanInterface.OnScanListener() {
             @Override
             public void getBarcode(String s) {
-                runOnUiThread(() -> {
-                    mList = mLeDeviceListAdapter.mLeDevices;
-                    scanResult(s);
-                });
+                scanScan(s);
             }
 
             @Override
@@ -138,13 +135,13 @@ public class DeviceScanActivity extends ListActivity {
         });
         s = getIntent().getStringExtra("SCAN");
         if (s != null && s.length() == 4) {
-            getScan(s);
-            setScan(s);
+            firstScan(s);
+            reScan(s);
         }
 
     }
 
-    private void setScan(String scan) {
+    private void reScan(String scan) {
         Handler handler = new Handler();
         handler.postDelayed(() -> {
             /**
@@ -152,17 +149,17 @@ public class DeviceScanActivity extends ListActivity {
              */
             if (!stopscan) {
                 runOnUiThread(() -> {
-                mLeDeviceListAdapter.clear();
-                scanLeDevice(true);
-                getScan(scan);
-                    });
+                    mLeDeviceListAdapter.notifyDataSetChanged();
+                    scanLeDevice(true);
+                    firstScan(scan);
+                });
             }
 
-        }, 6000); //0.1秒后执行Runnable中的run方法
+        }, 4000); //0.1秒后执行Runnable中的run方法
 
     }
 
-    private void getScan(String scan) {
+    private void firstScan(String scan) {
         Handler handler = new Handler();
         handler.postDelayed(() -> {
             /**
@@ -172,6 +169,21 @@ public class DeviceScanActivity extends ListActivity {
                 runOnUiThread(() -> {
                     mLeDeviceListAdapter.notifyDataSetChanged();
                     scanResult(scan);
+                });
+            }
+        }, 1000); //0.1秒后执行Runnable中的run方法
+    }
+
+    private void scanScan(String scan) {
+        Handler handler = new Handler();
+        handler.postDelayed(() -> {
+            /**
+             *要执行的操作
+             */
+            if (!stopscan) {
+                runOnUiThread(() -> {
+                    scanResult(scan);
+                    reScan(scan);
                 });
             }
         }, 1000); //0.1秒后执行Runnable中的run方法
@@ -255,7 +267,7 @@ public class DeviceScanActivity extends ListActivity {
 
     private void scanResult(String s) {
         mList = mLeDeviceListAdapter.getmLeDevices();
-
+        mLeDeviceListAdapter.notifyDataSetChanged();
         for (int i = 0; i < mList.size(); i++) {
             String s1 = mList.get(i).getAddress();
             String s2 = s1.substring(s1.length() - 5).replaceAll("[[\\s-:punct:]]", "");
@@ -303,14 +315,11 @@ public class DeviceScanActivity extends ListActivity {
     private void scanLeDevice(final boolean enable) {
         if (enable) {
             // Stops scanning after a pre-defined scan period.
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mScanning = false;
+            mHandler.postDelayed(() -> {
+                mScanning = false;
 //                    mBluetoothAdapter.stopLeScan(mLeScanCallback);
-                    mBluetoothLeScanner.stopScan(mScanCallback);
-                    invalidateOptionsMenu();
-                }
+                mBluetoothLeScanner.stopScan(mScanCallback);
+                invalidateOptionsMenu();
             }, SCAN_PERIOD);
 
             mScanning = true;
@@ -339,7 +348,7 @@ public class DeviceScanActivity extends ListActivity {
 
         public LeDeviceListAdapter() {
             super();
-            mLeDevices = new ArrayList<BluetoothDevice>();
+            mLeDevices = new ArrayList<>();
             mInflator = DeviceScanActivity.this.getLayoutInflater();
         }
 
