@@ -260,7 +260,10 @@ public class DeviceScanActivity extends ListActivity {
 
         if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CAMERA_SCAN) {
             s = data.getStringExtra(SCAN);
-            scanResult(s);
+            if (s != null && s.length() == 4) {
+                firstScan(s);
+                reScan(s);
+            }
         }
 
     }
