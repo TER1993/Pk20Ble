@@ -64,7 +64,7 @@
         android:layout_height="50dp"
         android:background="@color/gray"
         android:orientation="horizontal"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <TextView
             android:id="@+id/tv_l"
@@ -72,7 +72,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="L:10"
+            android:text="L:"
             android:textColor="@color/black"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -83,7 +83,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="W:10"
+            android:text="W:"
             android:textColor="@color/black"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -94,7 +94,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="H:10"
+            android:text="H:"
             android:textColor="@color/black"
             android:textSize="16sp"
             android:textStyle="bold" />

@@ -17,7 +17,6 @@ import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
-import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -184,86 +183,114 @@ public class BluetoothLeService extends Service {
             sendBroadcast(intent);
         } else if ("0000fff6-0000-1000-8000-00805f9b34fb".equals(characteristic.getUuid().toString())) {
             final byte[] data = characteristic.getValue();
-            Log.d("ZM", "接收数据: " + ByteUtils.toHexString(data));
-            if (data[3] == (byte) 0xB1 && data[0] == (byte) 0xAA && data[1] == (byte) 0x0A) {
-                mByteList.clear();
+            String result = ByteUtils.toHexString(data);
+            Log.d("ZM", "接收数据: " + result);
+
+            if (data.length == 15) {
+                //条码
+
+            } else if (data.length == 9 && data[0] == (byte) 0xAA){
+                //长宽高 b1b2长，b3b4宽，b5b6高
+                String itemL = "";
+                String itemW = "";
+                String itemH = "";
+                if (result != null) {
+                    itemL = result.substring(2, 6);
+                    itemW = result.substring(6, 10);
+                    itemH = result.substring(10, 14);
+                }
+
+                itemL = String.valueOf((double) Integer.parseInt(itemL, 16) / 10);
+                itemW = String.valueOf((double) Integer.parseInt(itemW, 16) / 10);
+                itemH = String.valueOf((double) Integer.parseInt(itemH, 16) / 10);
+
+                LWHData lwhData = new LWHData(itemL, itemW, itemH);
+                intent.putExtra(NOTIFICATION_DATA_LWH, lwhData);
+                sendBroadcast(intent);
+
             }
-            mByteList.add(data);
-            if (mByteList.size() == 9) {
-                final List<byte[]> mByteNewList = new ArrayList<>();
-                mByteNewList.addAll(mByteList);
-                mByteList.clear();
-                byte[] bytes0 = mByteNewList.get(0);
-                for (int i = 0; i < mByteNewList.size(); i++) {
-                    String bytesToHexString = DataManageUtils.bytesToHexString(mByteNewList.get(i));
-                    Log.d("PK20", "broadcastUpdate: " + bytesToHexString);
-                }
-                int jiaoYan6 = DataManageUtils.jiaoYan6(mByteNewList.get(0), mByteNewList.get(8));
-                if (jiaoYan6 != 0) {
-                    boolean cn = BluetoothLeService.this.getResources().getConfiguration().locale.getCountry().equals("CN");
-                    if (cn) {
-                        intent.putExtra(NOTIFICATION_DATA_ERR, "信道6数据有误");
-                    } else {
-                        intent.putExtra(NOTIFICATION_DATA_ERR, "ERROR");
-                    }
-                    sendBroadcast(intent);
-                    return;
-                }
-                StringBuilder stringBuffer = new StringBuilder();
-                if (bytes0[3] != (byte) 0xB1) {
-                    stringBuffer.append("B1");
-                }
-                if (mByteNewList.get(1)[0] != (byte) 0xB2)
-                if (mByteNewList.get(2)[0] != (byte) 0xB3) {{
-                    stringBuffer.append("B2");
-                }
-                    stringBuffer.append("B3");
-                }
-                if (mByteNewList.get(3)[0] != (byte) 0xB4) {
-                    stringBuffer.append("B4");
-                }
-                if (mByteNewList.get(4)[0] != (byte) 0xB5) {
-                    stringBuffer.append("B5");
-                }
-                if (mByteNewList.get(5)[0] != (byte) 0xB6) {
-                    stringBuffer.append("B6");
-                }
-                if (mByteNewList.get(6)[0] != (byte) 0xB7) {
-                    stringBuffer.append("B7");
-                }
-                if (mByteNewList.get(7)[0] != (byte) 0xB8) {
-                    stringBuffer.append("B8");
-                }
-                if (mByteNewList.get(8)[0] != (byte) 0xB9) {
-                    stringBuffer.append("B9");
-                }
-                if (TextUtils.isEmpty(stringBuffer.toString())) {
-                    Log.d("ZM", "数据接收到进行解析保存: " + System.currentTimeMillis());
-                    mThread m = new mThread(mByteNewList, characteristic, intent);
-                    m.start();
-                } else {
-                    String toString = stringBuffer.toString();
-                    int length = toString().length() / 2 + 1;
-                    StringBuilder zero = new StringBuilder();
-                    for (int i = 0; i < 15 - length + 1; i++) {
-                        zero.append("00");
-                    }
-                    String jiaoYan = DataManageUtils.getJiaoYan(toString.substring(0, 2)
-                            , toString.substring(toString.length() - 2, toString.length()));
-                    zero.append(jiaoYan);
-//                    String result = "AA02" + DataManageUtils.toHexString(length) + toString + zero + "00";
-//                    Log.d("ZM", "信道6数据部分重发: " + result);
-//                    BaseBleApplication.wri
-                    boolean cn = BluetoothLeService.this.getResources().getConfiguration().locale.getCountry().equals("CN");
-                    if (cn) {
-                        intent.putExtra(NOTIFICATION_DATA_ERR, "信道6数据部分重发");
-                    } else {
-                        intent.putExtra(NOTIFICATION_DATA_ERR, "ERROR");
-                    }
-                    sendBroadcast(intent);
-                }
-            }
+
+//            if (data[3] == (byte) 0xB1 && data[0] == (byte) 0xAA && data[1] == (byte) 0x0A) {
+//                mByteList.clear();
+//            }
+//            mByteList.add(data);
+//            if (mByteList.size() == 9) {
+//                final List<byte[]> mByteNewList = new ArrayList<>();
+//                mByteNewList.addAll(mByteList);
+//                mByteList.clear();
+//                byte[] bytes0 = mByteNewList.get(0);
+//                for (int i = 0; i < mByteNewList.size(); i++) {
+//                    String bytesToHexString = DataManageUtils.bytesToHexString(mByteNewList.get(i));
+//                    Log.d("PK20", "broadcastUpdate: " + bytesToHexString);
+//                }
+//                int jiaoYan6 = DataManageUtils.jiaoYan6(mByteNewList.get(0), mByteNewList.get(8));
+//                if (jiaoYan6 != 0) {
+//                    boolean cn = BluetoothLeService.this.getResources().getConfiguration().locale.getCountry().equals("CN");
+//                    if (cn) {
+//                        intent.putExtra(NOTIFICATION_DATA_ERR, "信道6数据有误");
+//                    } else {
+//                        intent.putExtra(NOTIFICATION_DATA_ERR, "ERROR");
+//                    }
+//                    sendBroadcast(intent);
+//                    return;
+//                }
+//                StringBuilder stringBuffer = new StringBuilder();
+//                if (bytes0[3] != (byte) 0xB1) {
+//                    stringBuffer.append("B1");
+//                }
+//                if (mByteNewList.get(1)[0] != (byte) 0xB2)
+//                if (mByteNewList.get(2)[0] != (byte) 0xB3) {{
+//                    stringBuffer.append("B2");
+//                }
+//                    stringBuffer.append("B3");
+//                }
+//                if (mByteNewList.get(3)[0] != (byte) 0xB4) {
+//                    stringBuffer.append("B4");
+//                }
+//                if (mByteNewList.get(4)[0] != (byte) 0xB5) {
+//                    stringBuffer.append("B5");
+//                }
+//                if (mByteNewList.get(5)[0] != (byte) 0xB6) {
+//                    stringBuffer.append("B6");
+//                }
+//                if (mByteNewList.get(6)[0] != (byte) 0xB7) {
+//                    stringBuffer.append("B7");
+//                }
+//                if (mByteNewList.get(7)[0] != (byte) 0xB8) {
+//                    stringBuffer.append("B8");
+//                }
+//                if (mByteNewList.get(8)[0] != (byte) 0xB9) {
+//                    stringBuffer.append("B9");
+//                }
+//                if (TextUtils.isEmpty(stringBuffer.toString())) {
+//                    Log.d("ZM", "数据接收到进行解析保存: " + System.currentTimeMillis());
+//                    mThread m = new mThread(mByteNewList, characteristic, intent);
+//                    m.start();
+//                } else {
+//                    String toString = stringBuffer.toString();
+//                    int length = toString().length() / 2 + 1;
+//                    StringBuilder zero = new StringBuilder();
+//                    for (int i = 0; i < 15 - length + 1; i++) {
+//                        zero.append("00");
+//                    }
+//                    String jiaoYan = DataManageUtils.getJiaoYan(toString.substring(0, 2)
+//                            , toString.substring(toString.length() - 2, toString.length()));
+//                    zero.append(jiaoYan);
+//
+//                    boolean cn = BluetoothLeService.this.getResources().getConfiguration().locale.getCountry().equals("CN");
+//                    if (cn) {
+//                        intent.putExtra(NOTIFICATION_DATA_ERR, "信道6数据部分重发");
+//                    } else {
+//                        intent.putExtra(NOTIFICATION_DATA_ERR, "ERROR");
+//                    }
+//                    sendBroadcast(intent);
+//                }
+//            } else {
+//                Log.d("ZM", "信道6的条码x: ");
+//            }
+
         } else {
+            Log.d("ZM", "非信道6: ");
             // For all other profiles, writes the data formatted in HEX.
             // 对于所有其他配置文件，用十六进制格式编写数据。
             final byte[] data = characteristic.getValue();
