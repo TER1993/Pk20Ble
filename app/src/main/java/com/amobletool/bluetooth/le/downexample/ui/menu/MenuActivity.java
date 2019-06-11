@@ -178,6 +178,8 @@ public class MenuActivity extends MVPBaseActivity<MenuContract.View, MenuPresent
                 kProgressHUD.dismiss();
             }
 
+        } else if ("Test6Data".equals(type)) {
+            Toast.makeText(MenuActivity.this, (String) msg, Toast.LENGTH_SHORT).show();
         }
 
     }

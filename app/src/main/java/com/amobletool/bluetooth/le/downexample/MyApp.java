@@ -210,6 +210,11 @@ public class MyApp extends BaseBleApplication {
                     }
 
                 }
+                String test = intent.getStringExtra(BluetoothLeService.TEST_DATA);
+                if (!TextUtils.isEmpty(test)) {
+                    EventBus.getDefault().post(new MsgEvent("Test6Data", test));
+                }
+
             }
         }
     };

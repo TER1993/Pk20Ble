@@ -57,6 +57,8 @@ public class BluetoothLeService extends Service {
     public final static String NOTIFICATION_DATA_LWH = "com.example.bluetooth.le.NOTIFICATION_DATA_LWH";
     public final static String NOTIFICATION_DATA_ERR = "com.example.bluetooth.le.NOTIFICATION_DATA_ERR";
 
+    public final static String TEST_DATA = "com.example.bluetooth.le.TEST_DATA";
+
     public final static UUID UUID_HEART_RATE_MEASUREMENT = UUID.fromString(SampleGattAttributes.HEART_RATE_MEASUREMENT);
 
     // Implements callback methods for GATT events that the app cares about.  For example,
@@ -188,6 +190,8 @@ public class BluetoothLeService extends Service {
 
             if (data.length == 15) {
                 //条码
+                intent.putExtra(TEST_DATA, result);
+                sendBroadcast(intent);
 
             } else if (data.length == 9 && data[0] == (byte) 0xAA){
                 //长宽高 b1b2长，b3b4宽，b5b6高
