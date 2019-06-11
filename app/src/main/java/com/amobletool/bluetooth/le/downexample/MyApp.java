@@ -176,43 +176,43 @@ public class MyApp extends BaseBleApplication {
                     if (lwh != null) {
                         EventBus.getDefault().post(new MsgEvent("LWHData", lwh));
                     } else {
-                        String dataERR = intent.getStringExtra(BluetoothLeService.NOTIFICATION_DATA_ERR);
-                        if (TextUtils.isEmpty(dataERR)) {
-                            PK20Data mPK20Data = intent.getParcelableExtra(BluetoothLeService.NOTIFICATION_DATA);
-                            Data mData = new Data();
-                            mData.setWangDian(mPK20Data.wangDian);
-                            mData.setCenter(mPK20Data.center);
-                            mData.setMuDi(mPK20Data.muDi);
-                            mData.setLiuCheng(mPK20Data.liuCheng);
-                            mData.setL(mPK20Data.L);
-                            mData.setW(mPK20Data.W);
-                            mData.setH(mPK20Data.H);
-                            mData.setG(mPK20Data.G);
-                            mData.setV(mPK20Data.V);
-                            mData.setTime(mPK20Data.time);
-                            mData.setBarCode(mPK20Data.barCode);
-                            mData.setZhu(mPK20Data.zhu);
-                            mData.setZi(mPK20Data.zi);
-                            mData.setBiaoJi(mPK20Data.biaoJi);
-                            mData.setBiaoshi(mPK20Data.biaoshi);
-                            mData.setMac(mPK20Data.mac);
-                            mData.setName(mPK20Data.name);
-                            MyApp.getDaoInstant().getDataDao().insertOrReplace(mData);
-                            boolean cn = getApplicationContext().getResources().getConfiguration().locale.getCountry().equals("CN");
-                            if (cn) {
-                                EventBus.getDefault().post(new MsgEvent("Save6DataSuccess", "数据存储成功"));
-                            } else {
-                                EventBus.getDefault().post(new MsgEvent("Save6DataSuccess", "Data storage success"));
-                            }
+                        String test = intent.getStringExtra(BluetoothLeService.TEST_DATA);
+                        if (!TextUtils.isEmpty(test)) {
+                            EventBus.getDefault().post(new MsgEvent("Test6Data", test));
                         } else {
-                            EventBus.getDefault().post(new MsgEvent("Save6Data", dataERR));
+                            String dataERR = intent.getStringExtra(BluetoothLeService.NOTIFICATION_DATA_ERR);
+                            if (TextUtils.isEmpty(dataERR)) {
+                                PK20Data mPK20Data = intent.getParcelableExtra(BluetoothLeService.NOTIFICATION_DATA);
+                                Data mData = new Data();
+                                mData.setWangDian(mPK20Data.wangDian);
+                                mData.setCenter(mPK20Data.center);
+                                mData.setMuDi(mPK20Data.muDi);
+                                mData.setLiuCheng(mPK20Data.liuCheng);
+                                mData.setL(mPK20Data.L);
+                                mData.setW(mPK20Data.W);
+                                mData.setH(mPK20Data.H);
+                                mData.setG(mPK20Data.G);
+                                mData.setV(mPK20Data.V);
+                                mData.setTime(mPK20Data.time);
+                                mData.setBarCode(mPK20Data.barCode);
+                                mData.setZhu(mPK20Data.zhu);
+                                mData.setZi(mPK20Data.zi);
+                                mData.setBiaoJi(mPK20Data.biaoJi);
+                                mData.setBiaoshi(mPK20Data.biaoshi);
+                                mData.setMac(mPK20Data.mac);
+                                mData.setName(mPK20Data.name);
+                                MyApp.getDaoInstant().getDataDao().insertOrReplace(mData);
+                                boolean cn = getApplicationContext().getResources().getConfiguration().locale.getCountry().equals("CN");
+                                if (cn) {
+                                    EventBus.getDefault().post(new MsgEvent("Save6DataSuccess", "数据存储成功"));
+                                } else {
+                                    EventBus.getDefault().post(new MsgEvent("Save6DataSuccess", "Data storage success"));
+                                }
+                            } else {
+                                EventBus.getDefault().post(new MsgEvent("Save6Data", dataERR));
+                            }
                         }
                     }
-
-                }
-                String test = intent.getStringExtra(BluetoothLeService.TEST_DATA);
-                if (!TextUtils.isEmpty(test)) {
-                    EventBus.getDefault().post(new MsgEvent("Test6Data", test));
                 }
 
             }

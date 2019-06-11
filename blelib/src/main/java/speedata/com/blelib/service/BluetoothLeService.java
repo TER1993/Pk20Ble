@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import speedata.com.blelib.bean.LWHData;
@@ -187,10 +188,25 @@ public class BluetoothLeService extends Service {
             final byte[] data = characteristic.getValue();
             String result = ByteUtils.toHexString(data);
             Log.d("ZM", "接收数据: " + result);
-
+            //393231343137373130303133000000
             if (data.length == 15) {
                 //条码
-                intent.putExtra(TEST_DATA, result);
+                String[] a = new String[15];
+                String[] b = new String[15];
+                String realBarcode = "";
+                for (int i = 0; i < 30; i = i + 2) {
+                    a[i/2] = Objects.requireNonNull(result).substring(i, i + 2);
+                    if (a[i/2].startsWith("3")) {
+                        b[i/2] = a[i/2].substring(1);
+                    }
+                }
+                for (int j = 0; j < b.length; j++) {
+                    if (b[j] != null) {
+                        realBarcode = realBarcode + b[j];
+                    }
+                }
+
+                intent.putExtra(TEST_DATA, realBarcode);
                 sendBroadcast(intent);
 
             } else if (data.length == 9 && data[0] == (byte) 0xAA){
@@ -198,11 +214,9 @@ public class BluetoothLeService extends Service {
                 String itemL = "";
                 String itemW = "";
                 String itemH = "";
-                if (result != null) {
-                    itemL = result.substring(2, 6);
-                    itemW = result.substring(6, 10);
-                    itemH = result.substring(10, 14);
-                }
+                itemL = result.substring(2, 6);
+                itemW = result.substring(6, 10);
+                itemH = result.substring(10, 14);
 
                 itemL = String.valueOf((double) Integer.parseInt(itemL, 16) / 10);
                 itemW = String.valueOf((double) Integer.parseInt(itemW, 16) / 10);
@@ -294,25 +308,25 @@ public class BluetoothLeService extends Service {
 //            }
 
         } else {
-            Log.d("ZM", "非信道6: ");
-            // For all other profiles, writes the data formatted in HEX.
-            // 对于所有其他配置文件，用十六进制格式编写数据。
-            final byte[] data = characteristic.getValue();
-            if (data != null && data.length > 0) {
-                final StringBuilder stringBuilder = new StringBuilder(data.length);
-                for (byte byteChar : data) {
-                    stringBuilder.append(String.format("%02X ", byteChar));
-                }
-                if (data[1] == (byte) 0x14) {
-                    int ff = DataManageUtils.jiaoYanLWHData(stringBuilder.toString(), "FF", "14");
-                    if (ff == 0) {
-                        sendLWHData(intent, data);
-                    }
-                } else {
-                    intent.putExtra(EXTRA_DATA, stringBuilder.toString());
-                    sendBroadcast(intent);
-                }
-            }
+//            Log.d("ZM", "非信道6: ");
+//            // For all other profiles, writes the data formatted in HEX.
+//            // 对于所有其他配置文件，用十六进制格式编写数据。
+//            final byte[] data = characteristic.getValue();
+//            if (data != null && data.length > 0) {
+//                final StringBuilder stringBuilder = new StringBuilder(data.length);
+//                for (byte byteChar : data) {
+//                    stringBuilder.append(String.format("%02X ", byteChar));
+//                }
+//                if (data[1] == (byte) 0x14) {
+//                    int ff = DataManageUtils.jiaoYanLWHData(stringBuilder.toString(), "FF", "14");
+//                    if (ff == 0) {
+//                        sendLWHData(intent, data);
+//                    }
+//                } else {
+//                    intent.putExtra(EXTRA_DATA, stringBuilder.toString());
+//                    sendBroadcast(intent);
+//                }
+//            }
         }
     }
 
@@ -642,7 +656,9 @@ public class BluetoothLeService extends Service {
      * @return A {@code List} of supported services.
      */
     public List<BluetoothGattService> getSupportedGattServices() {
-        if (mBluetoothGatt == null) return null;
+        if (mBluetoothGatt == null) {
+            return null;
+        }
 
         return mBluetoothGatt.getServices();
     }
