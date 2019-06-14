@@ -190,7 +190,18 @@ public class BluetoothLeService extends Service {
             //393231343137373130303133000000
             if (data.length == 15) {
                 //条码
-                String realBarcode = ByteUtils.toAsciiString(data);
+                int x = 0;
+                for (int i = 14; i >= 0; i--) {
+                    if (data[i] == 0x00){
+                        x = 15 - i;
+                    } else {
+                        break;
+                    }
+                }
+                byte[] c = new byte[15 - x];
+                System.arraycopy(data, 0, c, 0, c.length);
+
+                String realBarcode = ByteUtils.toAsciiString(c);
 
                 intent.putExtra(TEST_DATA, realBarcode);
                 sendBroadcast(intent);
