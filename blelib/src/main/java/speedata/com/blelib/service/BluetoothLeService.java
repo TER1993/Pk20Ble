@@ -22,7 +22,6 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 import speedata.com.blelib.bean.LWHData;
@@ -191,20 +190,7 @@ public class BluetoothLeService extends Service {
             //393231343137373130303133000000
             if (data.length == 15) {
                 //条码
-                String[] a = new String[15];
-                String[] b = new String[15];
-                String realBarcode = "";
-                for (int i = 0; i < 30; i = i + 2) {
-                    a[i/2] = Objects.requireNonNull(result).substring(i, i + 2);
-                    if (a[i/2].startsWith("3")) {
-                        b[i/2] = a[i/2].substring(1);
-                    }
-                }
-                for (int j = 0; j < b.length; j++) {
-                    if (b[j] != null) {
-                        realBarcode = realBarcode + b[j];
-                    }
-                }
+                String realBarcode = ByteUtils.toAsciiString(data);
 
                 intent.putExtra(TEST_DATA, realBarcode);
                 sendBroadcast(intent);
