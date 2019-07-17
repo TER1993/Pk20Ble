@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import speedata.com.blelib.bean.LWHData;
@@ -58,6 +59,17 @@ public class BluetoothLeService extends Service {
     public final static String NOTIFICATION_DATA_ERR = "com.example.bluetooth.le.NOTIFICATION_DATA_ERR";
 
     public final static String TEST_DATA = "com.example.bluetooth.le.TEST_DATA";
+
+    private boolean mData1 = false;
+    private boolean mData2 = false;
+    private byte[] c1;
+    private byte[] c2;
+    private byte[] c;
+
+    private String lenth1;
+    private int allLenth;
+    private int l1;
+    private int l2;
 
     public final static UUID UUID_HEART_RATE_MEASUREMENT = UUID.fromString(SampleGattAttributes.HEART_RATE_MEASUREMENT);
 
@@ -187,26 +199,100 @@ public class BluetoothLeService extends Service {
             final byte[] data = characteristic.getValue();
             String result = ByteUtils.toHexString(data);
             Log.d("ZM", "接收数据: " + result);
+
             //393231343137373130303133000000
-            if (data.length == 15) {
-                //条码
-                int x = 0;
-                for (int i = 14; i >= 0; i--) {
-                    if (data[i] == 0x00){
-                        x = 15 - i;
-                    } else {
-                        break;
-                    }
+            if (data.length == 19 && data[0] == (byte) 0xB1) {
+                lenth1 = Objects.requireNonNull(result).substring(2, 4);
+                allLenth = Integer.parseInt(lenth1, 16);
+                Log.d("ZM", "0xB1: " + allLenth);
+                if (allLenth > 15) {
+                    l1 = 15;
+                    l2 = allLenth - 15;
+                } else {
+                    l1 = allLenth;
+                    l2 = 0;
                 }
-                byte[] c = new byte[15 - x];
-                System.arraycopy(data, 0, c, 0, c.length);
+                Log.d("ZM", "l1: " + l1);
+                c1 = new byte[l1];
+                System.arraycopy(data, 2, c1, 0, l1);
+                mData1 = true;
+                Log.d("ZM", "mData1: " + mData1);
+
+                if (mData2 || l2 == 0) {
+                    c = new byte[allLenth];
+                    System.arraycopy(c1, 0, c, 0, l1);
+                    Log.d("ZM", "allLenth: " + allLenth);
+                    if (l2 != 0) {
+                        System.arraycopy(c2, 0, c, l1, l2);
+                    }
+                } else {
+                    Log.d("ZM", "else: " + mData1);
+                    return;
+                }
+
+                //数据处理
+//                int x = 0;
+//                for (int i = 14; i >= 0; i--) {
+//                    if (data[i] == 0x00) {
+//                        x = 15 - i;
+//                    } else {
+//                        break;
+//                    }
+//                }
+
 
                 String realBarcode = ByteUtils.toAsciiString(c);
-
+                Log.d("ZM", "realBarcode: " + realBarcode);
                 intent.putExtra(TEST_DATA, realBarcode);
                 sendBroadcast(intent);
 
-            } else if (data.length == 9 && data[0] == (byte) 0xAA){
+                mData1 = false;
+                mData2 = false;
+                Log.d("ZM", "mData1: " + mData1);
+            } else if (data[0] == (byte) 0xB2) {
+
+                if (l2 == 0) {
+                    Log.d("ZM", "l2: " + l2);
+                    return;
+                }
+
+                c2 = new byte[l2];
+                System.arraycopy(data, 1, c2, 0, l2);
+                mData2 = true;
+                Log.d("ZM", "mData2: " + mData2);
+
+                if (mData1) {
+                    c = new byte[allLenth];
+                    System.arraycopy(c1, 0, c, 0, l1);
+                    Log.d("ZM", "allLenth: " + allLenth);
+                    if (l2 != 0) {
+                        System.arraycopy(c2, 0, c, l1, l2);
+                    }
+                } else {
+                    Log.d("ZM", "mData1: " + mData1);
+                    return;
+                }
+
+                //数据处理
+//                int x = 0;
+//                for (int i = 14; i >= 0; i--) {
+//                    if (data[i] == 0x00) {
+//                        x = 15 - i;
+//                    } else {
+//                        break;
+//                    }
+//                }
+
+
+                String realBarcode = ByteUtils.toAsciiString(c);
+                Log.d("ZM", "realBarcode: " + realBarcode);
+                intent.putExtra(TEST_DATA, realBarcode);
+                sendBroadcast(intent);
+
+                mData1 = false;
+                mData2 = false;
+                Log.d("ZM", "mData2: " + mData2);
+            } else if (data.length == 9 && data[0] == (byte) 0xAA) {
                 //长宽高 b1b2长，b3b4宽，b5b6高
                 String itemL = "";
                 String itemW = "";
