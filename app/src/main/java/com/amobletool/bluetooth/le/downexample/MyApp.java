@@ -106,8 +106,9 @@ public class MyApp extends BaseBleApplication {
 
     private boolean compare(Activity ch) {
         boolean flag = false;
-        if (aList.contains(ch))
+        if (aList.contains(ch)) {
             flag = true;
+        }
         return flag;
     }
 

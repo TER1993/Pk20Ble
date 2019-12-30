@@ -7,11 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.view.Menu;
-import android.view.MenuItem;
 
 import com.amobletool.bluetooth.le.R;
-import com.amobletool.bluetooth.le.downexample.ui.DeviceScanActivity;
 
 import java.lang.reflect.ParameterizedType;
 
@@ -33,8 +30,9 @@ public abstract class MVPBaseActivity<V extends BaseView,T extends BasePresenter
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mPresenter!=null)
-        mPresenter.detachView();
+        if (mPresenter!=null) {
+            mPresenter.detachView();
+        }
     }
 
     @Override
