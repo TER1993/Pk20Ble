@@ -62,14 +62,33 @@ public class BluetoothLeService extends Service {
 
     private boolean mData1 = false;
     private boolean mData2 = false;
+    private boolean mData3 = false;
+    private boolean mData4 = false;
+    private boolean mData5 = false;
+    private boolean mData6 = false;
+    private boolean mData7 = false;
+    private boolean mData8 = false;
+
     private byte[] c1;
     private byte[] c2;
+    private byte[] c3;
+    private byte[] c4;
+    private byte[] c5;
+    private byte[] c6;
+    private byte[] c7;
+    private byte[] c8;
     private byte[] c;
 
     private String lenth1;
     private int allLenth;
     private int l1;
     private int l2;
+    private int l3;
+    private int l4;
+    private int l5;
+    private int l6;
+    private int l7;
+    private int l8;
 
     public final static UUID UUID_HEART_RATE_MEASUREMENT = UUID.fromString(SampleGattAttributes.HEART_RATE_MEASUREMENT);
 
@@ -200,59 +219,37 @@ public class BluetoothLeService extends Service {
             String result = ByteUtils.toHexString(data);
             Log.d("ZM", "接收数据: " + result);
 
-            //393231343137373130303133000000
+            //eyJDdXN0Q29kZSI6IlRUIiwiQ2F0ZWdvcnkiOiIxMTAxIiwiVmFsdWUiOiJUTjE5MTIwMDAzIn0=$ET_01_55B8
             if (data.length == 19 && data[0] == (byte) 0xB1) {
                 lenth1 = Objects.requireNonNull(result).substring(2, 4);
                 allLenth = Integer.parseInt(lenth1, 16);
                 Log.d("ZM", "0xB1: " + allLenth);
-                if (allLenth > 15) {
-                    l1 = 15;
-                    l2 = allLenth - 15;
-                } else {
-                    l1 = allLenth;
-                    l2 = 0;
-                }
+
+                //处理各个数据的长度了l1-l8,以及初始化各个数据状态，然后判断每个数据状态都为true即可
+                getAllLenth();
+
                 Log.d("ZM", "l1: " + l1);
                 c1 = new byte[l1];
                 System.arraycopy(data, 2, c1, 0, l1);
                 mData1 = true;
                 Log.d("ZM", "mData1: " + mData1);
 
-                if (mData2 || l2 == 0) {
+                if (mData1 && mData2 && mData3 && mData4 && mData5 && mData6 && mData7 && mData8) {
                     c = new byte[allLenth];
                     System.arraycopy(c1, 0, c, 0, l1);
-                    Log.d("ZM", "allLenth: " + allLenth);
-                    if (l2 != 0) {
-                        System.arraycopy(c2, 0, c, l1, l2);
-                    }
                 } else {
-                    Log.d("ZM", "else: " + mData1);
                     return;
                 }
-
-                //数据处理
-//                int x = 0;
-//                for (int i = 14; i >= 0; i--) {
-//                    if (data[i] == 0x00) {
-//                        x = 15 - i;
-//                    } else {
-//                        break;
-//                    }
-//                }
-
 
                 String realBarcode = ByteUtils.toAsciiString(c);
                 Log.d("ZM", "realBarcode: " + realBarcode);
                 intent.putExtra(TEST_DATA, realBarcode);
                 sendBroadcast(intent);
 
-                mData1 = false;
-                mData2 = false;
-                Log.d("ZM", "mData1: " + mData1);
-            } else if (data[0] == (byte) 0xB2) {
+            } else if (data.length == 19 && data[0] == (byte) 0xB2) {
 
                 if (l2 == 0) {
-                    Log.d("ZM", "l2: " + l2);
+                    Log.d("ZM", "l1: " + l1);
                     return;
                 }
 
@@ -261,37 +258,197 @@ public class BluetoothLeService extends Service {
                 mData2 = true;
                 Log.d("ZM", "mData2: " + mData2);
 
-                if (mData1) {
+                if (mData1 && mData2 && mData3 && mData4 && mData5 && mData6 && mData7 && mData8) {
                     c = new byte[allLenth];
                     System.arraycopy(c1, 0, c, 0, l1);
-                    Log.d("ZM", "allLenth: " + allLenth);
-                    if (l2 != 0) {
-                        System.arraycopy(c2, 0, c, l1, l2);
-                    }
+                    System.arraycopy(c2, 0, c, 15, l2);
+
                 } else {
-                    Log.d("ZM", "mData1: " + mData1);
                     return;
                 }
-
-                //数据处理
-//                int x = 0;
-//                for (int i = 14; i >= 0; i--) {
-//                    if (data[i] == 0x00) {
-//                        x = 15 - i;
-//                    } else {
-//                        break;
-//                    }
-//                }
-
 
                 String realBarcode = ByteUtils.toAsciiString(c);
                 Log.d("ZM", "realBarcode: " + realBarcode);
                 intent.putExtra(TEST_DATA, realBarcode);
                 sendBroadcast(intent);
 
-                mData1 = false;
-                mData2 = false;
-                Log.d("ZM", "mData2: " + mData2);
+            } else if (data.length == 19 && data[0] == (byte) 0xB3) {
+
+                if (l3 == 0) {
+                    Log.d("ZM", "l2: " + l2);
+                    return;
+                }
+
+                c3 = new byte[l3];
+                System.arraycopy(data, 1, c3, 0, l3);
+                mData3 = true;
+                Log.d("ZM", "mData3: " + mData3);
+
+                if (mData1 && mData2 && mData3 && mData4 && mData5 && mData6 && mData7 && mData8) {
+                    c = new byte[allLenth];
+                    System.arraycopy(c1, 0, c, 0, l1);
+                    System.arraycopy(c2, 0, c, 15, l2);
+                    System.arraycopy(c3, 0, c, 31, l3);
+
+                } else {
+                    return;
+                }
+
+                String realBarcode = ByteUtils.toAsciiString(c);
+                Log.d("ZM", "realBarcode: " + realBarcode);
+                intent.putExtra(TEST_DATA, realBarcode);
+                sendBroadcast(intent);
+
+            } else if (data.length == 19 && data[0] == (byte) 0xB4) {
+
+                if (l4 == 0) {
+                    Log.d("ZM", "l3: " + l3);
+                    return;
+                }
+
+                c4 = new byte[l4];
+                System.arraycopy(data, 1, c4, 0, l4);
+                mData4 = true;
+                Log.d("ZM", "mData4: " + mData4);
+
+                if (mData1 && mData2 && mData3 && mData4 && mData5 && mData6 && mData7 && mData8) {
+                    c = new byte[allLenth];
+                    System.arraycopy(c1, 0, c, 0, l1);
+                    System.arraycopy(c2, 0, c, 15, l2);
+                    System.arraycopy(c3, 0, c, 31, l3);
+                    System.arraycopy(c4, 0, c, 47, l4);
+
+                } else {
+                    return;
+                }
+
+                String realBarcode = ByteUtils.toAsciiString(c);
+                Log.d("ZM", "realBarcode: " + realBarcode);
+                intent.putExtra(TEST_DATA, realBarcode);
+                sendBroadcast(intent);
+
+            } else if (data.length == 19 && data[0] == (byte) 0xB5) {
+
+                if (l5 == 0) {
+                    Log.d("ZM", "l4: " + l4);
+                    return;
+                }
+
+                c5 = new byte[l5];
+                System.arraycopy(data, 1, c5, 0, l5);
+                mData5 = true;
+                Log.d("ZM", "mData5: " + mData5);
+
+                if (mData1 && mData2 && mData3 && mData4 && mData5 && mData6 && mData7 && mData8) {
+                    c = new byte[allLenth];
+                    System.arraycopy(c1, 0, c, 0, l1);
+                    System.arraycopy(c2, 0, c, 15, l2);
+                    System.arraycopy(c3, 0, c, 31, l3);
+                    System.arraycopy(c4, 0, c, 47, l4);
+                    System.arraycopy(c5, 0, c, 63, l5);
+
+                } else {
+                    return;
+                }
+
+                String realBarcode = ByteUtils.toAsciiString(c);
+                Log.d("ZM", "realBarcode: " + realBarcode);
+                intent.putExtra(TEST_DATA, realBarcode);
+                sendBroadcast(intent);
+
+            } else if (data.length == 19 && data[0] == (byte) 0xB6) {
+
+                if (l6 == 0) {
+                    Log.d("ZM", "l5: " + l5);
+                    return;
+                }
+
+                c6 = new byte[l6];
+                System.arraycopy(data, 1, c6, 0, l6);
+                mData6 = true;
+                Log.d("ZM", "mData6: " + mData6);
+
+                if (mData1 && mData2 && mData3 && mData4 && mData5 && mData6 && mData7 && mData8) {
+                    c = new byte[allLenth];
+                    System.arraycopy(c1, 0, c, 0, l1);
+                    System.arraycopy(c2, 0, c, 15, l2);
+                    System.arraycopy(c3, 0, c, 31, l3);
+                    System.arraycopy(c4, 0, c, 47, l4);
+                    System.arraycopy(c5, 0, c, 63, l5);
+                    System.arraycopy(c6, 0, c, 79, l6);
+
+                } else {
+                    return;
+                }
+
+                String realBarcode = ByteUtils.toAsciiString(c);
+                Log.d("ZM", "realBarcode: " + realBarcode);
+                intent.putExtra(TEST_DATA, realBarcode);
+                sendBroadcast(intent);
+
+            } else if (data.length == 19 && data[0] == (byte) 0xB7) {
+
+                if (l7 == 0) {
+                    Log.d("ZM", "l6: " + l6);
+                    return;
+                }
+
+                c7 = new byte[l7];
+                System.arraycopy(data, 1, c7, 0, l7);
+                mData7 = true;
+                Log.d("ZM", "mData7: " + mData7);
+
+                if (mData1 && mData2 && mData3 && mData4 && mData5 && mData6 && mData7 && mData8) {
+                    c = new byte[allLenth];
+                    System.arraycopy(c1, 0, c, 0, l1);
+                    System.arraycopy(c2, 0, c, 15, l2);
+                    System.arraycopy(c3, 0, c, 31, l3);
+                    System.arraycopy(c4, 0, c, 47, l4);
+                    System.arraycopy(c5, 0, c, 63, l5);
+                    System.arraycopy(c6, 0, c, 79, l6);
+                    System.arraycopy(c7, 0, c, 95, l7);
+
+                } else {
+                    return;
+                }
+
+                String realBarcode = ByteUtils.toAsciiString(c);
+                Log.d("ZM", "realBarcode: " + realBarcode);
+                intent.putExtra(TEST_DATA, realBarcode);
+                sendBroadcast(intent);
+
+            } else if (data.length == 19 && data[0] == (byte) 0xB8) {
+
+                if (l8 == 0) {
+                    Log.d("ZM", "l7: " + l7);
+                    return;
+                }
+
+                c8 = new byte[l8];
+                System.arraycopy(data, 1, c8, 0, l8);
+                mData8 = true;
+                Log.d("ZM", "mData8: " + mData8);
+
+                if (mData1 && mData2 && mData3 && mData4 && mData5 && mData6 && mData7 && mData8) {
+                    c = new byte[allLenth];
+                    System.arraycopy(c1, 0, c, 0, l1);
+                    System.arraycopy(c2, 0, c, 15, l2);
+                    System.arraycopy(c3, 0, c, 31, l3);
+                    System.arraycopy(c4, 0, c, 47, l4);
+                    System.arraycopy(c5, 0, c, 63, l5);
+                    System.arraycopy(c6, 0, c, 79, l6);
+                    System.arraycopy(c7, 0, c, 95, l7);
+                    System.arraycopy(c8, 0, c, 111, l8);
+
+                } else {
+                    return;
+                }
+
+                String realBarcode = ByteUtils.toAsciiString(c);
+                Log.d("ZM", "realBarcode: " + realBarcode);
+                intent.putExtra(TEST_DATA, realBarcode);
+                sendBroadcast(intent);
+
             } else if (data.length == 9 && data[0] == (byte) 0xAA) {
                 //长宽高 b1b2长，b3b4宽，b5b6高
                 String itemL = "";
@@ -310,106 +467,170 @@ public class BluetoothLeService extends Service {
                 sendBroadcast(intent);
 
             }
+        }
+    }
 
-//            if (data[3] == (byte) 0xB1 && data[0] == (byte) 0xAA && data[1] == (byte) 0x0A) {
-//                mByteList.clear();
-//            }
-//            mByteList.add(data);
-//            if (mByteList.size() == 9) {
-//                final List<byte[]> mByteNewList = new ArrayList<>();
-//                mByteNewList.addAll(mByteList);
-//                mByteList.clear();
-//                byte[] bytes0 = mByteNewList.get(0);
-//                for (int i = 0; i < mByteNewList.size(); i++) {
-//                    String bytesToHexString = DataManageUtils.bytesToHexString(mByteNewList.get(i));
-//                    Log.d("PK20", "broadcastUpdate: " + bytesToHexString);
-//                }
-//                int jiaoYan6 = DataManageUtils.jiaoYan6(mByteNewList.get(0), mByteNewList.get(8));
-//                if (jiaoYan6 != 0) {
-//                    boolean cn = BluetoothLeService.this.getResources().getConfiguration().locale.getCountry().equals("CN");
-//                    if (cn) {
-//                        intent.putExtra(NOTIFICATION_DATA_ERR, "信道6数据有误");
-//                    } else {
-//                        intent.putExtra(NOTIFICATION_DATA_ERR, "ERROR");
-//                    }
-//                    sendBroadcast(intent);
-//                    return;
-//                }
-//                StringBuilder stringBuffer = new StringBuilder();
-//                if (bytes0[3] != (byte) 0xB1) {
-//                    stringBuffer.append("B1");
-//                }
-//                if (mByteNewList.get(1)[0] != (byte) 0xB2)
-//                if (mByteNewList.get(2)[0] != (byte) 0xB3) {{
-//                    stringBuffer.append("B2");
-//                }
-//                    stringBuffer.append("B3");
-//                }
-//                if (mByteNewList.get(3)[0] != (byte) 0xB4) {
-//                    stringBuffer.append("B4");
-//                }
-//                if (mByteNewList.get(4)[0] != (byte) 0xB5) {
-//                    stringBuffer.append("B5");
-//                }
-//                if (mByteNewList.get(5)[0] != (byte) 0xB6) {
-//                    stringBuffer.append("B6");
-//                }
-//                if (mByteNewList.get(6)[0] != (byte) 0xB7) {
-//                    stringBuffer.append("B7");
-//                }
-//                if (mByteNewList.get(7)[0] != (byte) 0xB8) {
-//                    stringBuffer.append("B8");
-//                }
-//                if (mByteNewList.get(8)[0] != (byte) 0xB9) {
-//                    stringBuffer.append("B9");
-//                }
-//                if (TextUtils.isEmpty(stringBuffer.toString())) {
-//                    Log.d("ZM", "数据接收到进行解析保存: " + System.currentTimeMillis());
-//                    mThread m = new mThread(mByteNewList, characteristic, intent);
-//                    m.start();
-//                } else {
-//                    String toString = stringBuffer.toString();
-//                    int length = toString().length() / 2 + 1;
-//                    StringBuilder zero = new StringBuilder();
-//                    for (int i = 0; i < 15 - length + 1; i++) {
-//                        zero.append("00");
-//                    }
-//                    String jiaoYan = DataManageUtils.getJiaoYan(toString.substring(0, 2)
-//                            , toString.substring(toString.length() - 2, toString.length()));
-//                    zero.append(jiaoYan);
-//
-//                    boolean cn = BluetoothLeService.this.getResources().getConfiguration().locale.getCountry().equals("CN");
-//                    if (cn) {
-//                        intent.putExtra(NOTIFICATION_DATA_ERR, "信道6数据部分重发");
-//                    } else {
-//                        intent.putExtra(NOTIFICATION_DATA_ERR, "ERROR");
-//                    }
-//                    sendBroadcast(intent);
-//                }
-//            } else {
-//                Log.d("ZM", "信道6的条码x: ");
-//            }
+    private void getAllLenth() {
+        if (allLenth > 111) {
+
+            l1 = 15;
+            l2 = 16;
+            l3 = 16;
+            l4 = 16;
+            l5 = 16;
+            l6 = 16;
+            l7 = 16;
+            l8 = allLenth - 111;
+
+            mData1 = false;
+            mData2 = false;
+            mData3 = false;
+            mData4 = false;
+            mData5 = false;
+            mData6 = false;
+            mData7 = false;
+            mData8 = false;
+
+        } else if (allLenth > 95) {
+
+            l1 = 15;
+            l2 = 16;
+            l3 = 16;
+            l4 = 16;
+            l5 = 16;
+            l6 = 16;
+            l7 = allLenth - 95;
+            l8 = 0;
+
+            mData1 = false;
+            mData2 = false;
+            mData3 = false;
+            mData4 = false;
+            mData5 = false;
+            mData6 = false;
+            mData7 = false;
+            mData8 = true;
+
+        } else if (allLenth > 79) {
+
+            l1 = 15;
+            l2 = 16;
+            l3 = 16;
+            l4 = 16;
+            l5 = 16;
+            l6 = allLenth - 79;
+            l7 = 0;
+            l8 = 0;
+
+            mData1 = false;
+            mData2 = false;
+            mData3 = false;
+            mData4 = false;
+            mData5 = false;
+            mData6 = false;
+            mData7 = true;
+            mData8 = true;
+
+        } else if (allLenth > 63) {
+
+            l1 = 15;
+            l2 = 16;
+            l3 = 16;
+            l4 = 16;
+            l5 = allLenth - 63;
+            l6 = 0;
+            l7 = 0;
+            l8 = 0;
+
+            mData1 = false;
+            mData2 = false;
+            mData3 = false;
+            mData4 = false;
+            mData5 = false;
+            mData6 = true;
+            mData7 = true;
+            mData8 = true;
+
+        } else if (allLenth > 47) {
+
+            l1 = 15;
+            l2 = 16;
+            l3 = 16;
+            l4 = allLenth - 47;
+            l5 = 0;
+            l6 = 0;
+            l7 = 0;
+            l8 = 0;
+
+            mData1 = false;
+            mData2 = false;
+            mData3 = false;
+            mData4 = false;
+            mData5 = true;
+            mData6 = true;
+            mData7 = true;
+            mData8 = true;
+
+        } else if (allLenth > 31) {
+
+            l1 = 15;
+            l2 = 16;
+            l3 = allLenth - 31;
+            l4 = 0;
+            l5 = 0;
+            l6 = 0;
+            l7 = 0;
+            l8 = 0;
+
+            mData1 = false;
+            mData2 = false;
+            mData3 = false;
+            mData4 = true;
+            mData5 = true;
+            mData6 = true;
+            mData7 = true;
+            mData8 = true;
+
+        } else if (allLenth > 15) {
+
+            l1 = 15;
+            l2 = allLenth - 15;
+            l3 = 0;
+            l4 = 0;
+            l5 = 0;
+            l6 = 0;
+            l7 = 0;
+            l8 = 0;
+
+            mData1 = false;
+            mData2 = false;
+            mData3 = true;
+            mData4 = true;
+            mData5 = true;
+            mData6 = true;
+            mData7 = true;
+            mData8 = true;
 
         } else {
-//            Log.d("ZM", "非信道6: ");
-//            // For all other profiles, writes the data formatted in HEX.
-//            // 对于所有其他配置文件，用十六进制格式编写数据。
-//            final byte[] data = characteristic.getValue();
-//            if (data != null && data.length > 0) {
-//                final StringBuilder stringBuilder = new StringBuilder(data.length);
-//                for (byte byteChar : data) {
-//                    stringBuilder.append(String.format("%02X ", byteChar));
-//                }
-//                if (data[1] == (byte) 0x14) {
-//                    int ff = DataManageUtils.jiaoYanLWHData(stringBuilder.toString(), "FF", "14");
-//                    if (ff == 0) {
-//                        sendLWHData(intent, data);
-//                    }
-//                } else {
-//                    intent.putExtra(EXTRA_DATA, stringBuilder.toString());
-//                    sendBroadcast(intent);
-//                }
-//            }
+
+            l1 = allLenth;
+            l2 = 0;
+            l3 = 0;
+            l4 = 0;
+            l5 = 0;
+            l6 = 0;
+            l7 = 0;
+            l8 = 0;
+
+            mData1 = false;
+            mData2 = true;
+            mData3 = true;
+            mData4 = true;
+            mData5 = true;
+            mData6 = true;
+            mData7 = true;
+            mData8 = true;
+
         }
     }
 
