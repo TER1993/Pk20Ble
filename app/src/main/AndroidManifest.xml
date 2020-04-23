@@ -33,6 +33,7 @@ limitations under the License.
     <!--动态申请位置权限-->
     <uses-permission-sdk-23 android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission-sdk-23 android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission-sdk-23 android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
 
     <application
         android:name=".downexample.MyApp"
@@ -46,12 +47,14 @@ limitations under the License.
         tools:ignore="AllowBackup,UnusedAttribute">
         <activity
             android:name=".downexample.ui.DeviceScanActivity"
+            android:foregroundServiceType="location"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
 
         <activity
             android:name=".downexample.ui.menu.MenuActivity"
+            android:foregroundServiceType="location"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"
             tools:ignore="LockedOrientationActivity">
@@ -63,11 +66,13 @@ limitations under the License.
 
         <activity
             android:name=".downexample.ui.add.AddActivity"
+            android:foregroundServiceType="location"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
 
         <activity
             android:name=".downexample.ui.scan.ScanActivity"
+            android:foregroundServiceType="location"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             tools:ignore="LockedOrientationActivity" />

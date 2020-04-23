@@ -8,6 +8,7 @@ import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -204,7 +205,8 @@ public class MenuActivity extends MVPBaseActivity<MenuContract.View, MenuPresent
     }
 
     /**
-     *  修复高版本蓝牙数据传输问题
+     * 修复高版本蓝牙数据传输问题
+     *
      * @param msgEvent
      */
     @Subscribe(threadMode = ThreadMode.ASYNC)
@@ -400,16 +402,35 @@ public class MenuActivity extends MVPBaseActivity<MenuContract.View, MenuPresent
     }
 
 
+
     private void permission() {
-        AndPermission.with(MenuActivity.this)
-                .permission(Manifest.permission.ACCESS_COARSE_LOCATION
-                        , Manifest.permission.WRITE_EXTERNAL_STORAGE
-                        , Manifest.permission.BLUETOOTH
-                        , Manifest.permission.BLUETOOTH_ADMIN
-                        , Manifest.permission.CAMERA
-                        , Manifest.permission.INTERNET)
-                .callback(listener)
-                .rationale((requestCode, rationale) -> AndPermission.rationaleDialog(MenuActivity.this, rationale).show()).start();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            AndPermission.with(MenuActivity.this)
+                    .permission(Manifest.permission.ACCESS_COARSE_LOCATION
+                            , Manifest.permission.ACCESS_FINE_LOCATION
+                            , Manifest.permission.ACCESS_BACKGROUND_LOCATION
+                            , Manifest.permission.WRITE_EXTERNAL_STORAGE
+                            , Manifest.permission.BLUETOOTH
+                            , Manifest.permission.BLUETOOTH_ADMIN
+                            , Manifest.permission.CAMERA
+                            , Manifest.permission.INTERNET)
+                    .callback(listener)
+                    .rationale((requestCode, rationale) -> AndPermission.rationaleDialog(MenuActivity.this, rationale).show()).start();
+        } else {
+            AndPermission.with(MenuActivity.this)
+                    .permission(Manifest.permission.ACCESS_COARSE_LOCATION
+                            , Manifest.permission.ACCESS_FINE_LOCATION
+                            , Manifest.permission.WRITE_EXTERNAL_STORAGE
+                            , Manifest.permission.BLUETOOTH
+                            , Manifest.permission.BLUETOOTH_ADMIN
+                            , Manifest.permission.CAMERA
+                            , Manifest.permission.INTERNET)
+                    .callback(listener)
+                    .rationale((requestCode, rationale) -> AndPermission.rationaleDialog(MenuActivity.this, rationale).show()).start();
+
+        }
+
     }
 
     PermissionListener listener = new PermissionListener() {
