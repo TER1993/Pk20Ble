@@ -1,7 +1,10 @@
 package speedata.com.blelib.utils;
 
 
+import android.annotation.SuppressLint;
+
 import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * byte数据转换
@@ -60,9 +63,10 @@ public class ByteUtils {
      * @param bytes
      * @return
      */
+    @SuppressLint("NewApi")
     public static int toInt(byte[] bytes) {
         String hexString = toHexString(bytes);
-        return Integer.parseInt(hexString, 16);
+        return Integer.parseInt(Objects.requireNonNull(hexString), 16);
     }
 
 

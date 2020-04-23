@@ -153,8 +153,9 @@ public class Utils {
         List<Integer> result = new ArrayList<Integer>();
         for (int i = 0; i < 32; i++) {
             int b = 1 << i;
-            if ((number & b) > 0)
+            if ((number & b) > 0) {
                 result.add(b);
+            }
         }
 
         return result;
@@ -219,7 +220,7 @@ public class Utils {
 
     // HexString����>byte
     public static byte[] hexStringToBytes(String hexString) {
-        if (hexString == null || hexString.equals("")) {
+        if (hexString == null || "".equals(hexString)) {
             return null;
         }
         hexString = hexString.toUpperCase();
@@ -262,11 +263,9 @@ public class Utils {
      */
     public static byte uniteBytes(byte src0, byte src1) {
         try {
-            byte _b0 = Byte.decode("0x" + new String(new byte[]{src0}))
-                    .byteValue();
+            byte _b0 = Byte.decode("0x" + new String(new byte[]{src0}));
             _b0 = (byte) (_b0 << 4);
-            byte _b1 = Byte.decode("0x" + new String(new byte[]{src1}))
-                    .byteValue();
+            byte _b1 = Byte.decode("0x" + new String(new byte[]{src1}));
             byte ret = (byte) (_b0 ^ _b1);
             return ret;
         } catch (Exception e) {

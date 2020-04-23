@@ -2,6 +2,7 @@ package com.amobletool.bluetooth.le.downexample.ui.menu;
 
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
@@ -9,8 +10,6 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -21,6 +20,9 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.amobletool.bluetooth.le.R;
 import com.amobletool.bluetooth.le.downexample.MyApp;
@@ -36,14 +38,13 @@ import com.scandecode.ScanDecode;
 import com.scandecode.inf.ScanInterface;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionListener;
-import com.yanzhenjie.permission.Rationale;
-import com.yanzhenjie.permission.RationaleListener;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
+import java.util.Objects;
 
 import speedata.com.blelib.bean.LWHData;
 
@@ -77,7 +78,7 @@ public class MenuActivity extends MVPBaseActivity<MenuContract.View, MenuPresent
 
         // 初始化 Bluetooth adapter, 通过蓝牙管理器得到一个参考蓝牙适配器(API必须在以上android4.3或以上和版本)
         final BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-        BluetoothAdapter mBluetoothAdapter = bluetoothManager.getAdapter();
+        BluetoothAdapter mBluetoothAdapter = Objects.requireNonNull(bluetoothManager).getAdapter();
         if (!mBluetoothAdapter.isEnabled()) {
             mBluetoothAdapter.enable();
         }
@@ -143,6 +144,7 @@ public class MenuActivity extends MVPBaseActivity<MenuContract.View, MenuPresent
         super.onPause();
     }
 
+    @SuppressLint("SetTextI18n")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMain(MsgEvent msgEvent) {
         String type = msgEvent.getType();
@@ -185,11 +187,12 @@ public class MenuActivity extends MVPBaseActivity<MenuContract.View, MenuPresent
     }
 
 
+    @SuppressLint("SetTextI18n")
     private void initScanTime() {
 
         Handler handler = new Handler();
         handler.postDelayed(() -> {
-            /**
+            /*
              *要执行的操作
              */
             ll.setVisibility(View.VISIBLE);
@@ -217,11 +220,11 @@ public class MenuActivity extends MVPBaseActivity<MenuContract.View, MenuPresent
 
 
     private void initView() {
-        device_name = (TextView) findViewById(R.id.device_name);
-        device_address = (TextView) findViewById(R.id.device_address);
+        device_name = findViewById(R.id.device_name);
+        device_address = findViewById(R.id.device_address);
 //        btn_serviceStatus = (ToggleButton) findViewById(btn_serviceStatus);
-        frame_main = (FrameLayout) findViewById(R.id.frame_main);
-        ivOn = (LinearLayout) findViewById(R.id.iv_on);
+        frame_main = findViewById(R.id.frame_main);
+        ivOn = findViewById(R.id.iv_on);
         ivOn.setOnClickListener(this);
 
 //        btn_serviceStatus.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -239,23 +242,23 @@ public class MenuActivity extends MVPBaseActivity<MenuContract.View, MenuPresent
 //            }
 //        });
 
-        ll = (LinearLayout) findViewById(R.id.ll);
-        add = (TextView) findViewById(R.id.add);
+        ll = findViewById(R.id.ll);
+        add = findViewById(R.id.add);
         add.setOnClickListener(this);
-        start = (TextView) findViewById(R.id.start);
+        start = findViewById(R.id.start);
         start.setOnClickListener(this);
-        show = (TextView) findViewById(R.id.show);
+        show = findViewById(R.id.show);
         show.setOnClickListener(this);
-        set = (TextView) findViewById(R.id.set);
+        set = findViewById(R.id.set);
         set.setOnClickListener(this);
 
 
-        mTvL = (TextView) findViewById(R.id.tv_l);
-        mTvW = (TextView) findViewById(R.id.tv_w);
-        mTvH = (TextView) findViewById(R.id.tv_h);
+        mTvL = findViewById(R.id.tv_l);
+        mTvW = findViewById(R.id.tv_w);
+        mTvH = findViewById(R.id.tv_h);
 
 
-        boolean cn = getApplicationContext().getResources().getConfiguration().locale.getCountry().equals("CN");
+        boolean cn = "CN".equals(getApplicationContext().getResources().getConfiguration().locale.getCountry());
         if (cn) {
             kProgressHUD = KProgressHUD.create(getApplicationContext())
                     .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
@@ -291,6 +294,8 @@ public class MenuActivity extends MVPBaseActivity<MenuContract.View, MenuPresent
                 break;
             case R.id.iv_on:
                 closeBle();
+                break;
+            default:
                 break;
         }
     }
@@ -373,7 +378,7 @@ public class MenuActivity extends MVPBaseActivity<MenuContract.View, MenuPresent
             case KeyEvent.ACTION_DOWN:
                 if ((System.currentTimeMillis() - mkeyTime) > 2000) {
                     mkeyTime = System.currentTimeMillis();
-                    boolean cn = getApplicationContext().getResources().getConfiguration().locale.getCountry().equals("CN");
+                    boolean cn = "CN".equals(getApplicationContext().getResources().getConfiguration().locale.getCountry());
                     if (cn) {
                         Toast.makeText(getApplicationContext(), "再次点击返回退出", Toast.LENGTH_LONG).show();
                     } else {
@@ -388,6 +393,8 @@ public class MenuActivity extends MVPBaseActivity<MenuContract.View, MenuPresent
                     }
                 }
                 return false;
+            default:
+                break;
         }
         return super.onKeyDown(keyCode, event);
     }
@@ -402,12 +409,7 @@ public class MenuActivity extends MVPBaseActivity<MenuContract.View, MenuPresent
                         , Manifest.permission.CAMERA
                         , Manifest.permission.INTERNET)
                 .callback(listener)
-                .rationale(new RationaleListener() {
-                    @Override
-                    public void showRequestPermissionRationale(int requestCode, Rationale rationale) {
-                        AndPermission.rationaleDialog(MenuActivity.this, rationale).show();
-                    }
-                }).start();
+                .rationale((requestCode, rationale) -> AndPermission.rationaleDialog(MenuActivity.this, rationale).show()).start();
     }
 
     PermissionListener listener = new PermissionListener() {
@@ -441,6 +443,8 @@ public class MenuActivity extends MVPBaseActivity<MenuContract.View, MenuPresent
             case android.R.id.home:
                 onBackPressed();
                 return true;
+            default:
+                break;
         }
         return true;
     }

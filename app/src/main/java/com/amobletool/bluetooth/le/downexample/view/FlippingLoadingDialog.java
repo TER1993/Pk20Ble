@@ -30,8 +30,8 @@ public class FlippingLoadingDialog extends Dialog {
 
     private void init() {
         setContentView(R.layout.diloag_flipping_loading);
-        mFivIcon = (ImageView) findViewById(R.id.toast_icon);
-        mHtvText = (TextView) findViewById(R.id.toast_text);
+        mFivIcon = findViewById(R.id.toast_icon);
+        mHtvText = findViewById(R.id.toast_text);
         mHtvText.setText(mText);
         setCanceledOnTouchOutside(false);
     }

@@ -153,7 +153,7 @@ public class BluetoothLeService extends Service {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        boolean cn = BluetoothLeService.this.getResources().getConfiguration().locale.getCountry().equals("CN");
+                        boolean cn = "CN".equals(BluetoothLeService.this.getResources().getConfiguration().locale.getCountry());
                         if (cn) {
                             Toast.makeText(BluetoothLeService.this, "写入失败", Toast.LENGTH_LONG).show();
                         } else {
@@ -165,7 +165,7 @@ public class BluetoothLeService extends Service {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        boolean cn = BluetoothLeService.this.getResources().getConfiguration().locale.getCountry().equals("CN");
+                        boolean cn = "CN".equals(BluetoothLeService.this.getResources().getConfiguration().locale.getCountry());
                         if (cn) {
                             Toast.makeText(BluetoothLeService.this, "没有权限", Toast.LENGTH_LONG).show();
                         } else {
@@ -454,7 +454,7 @@ public class BluetoothLeService extends Service {
                 String itemL = "";
                 String itemW = "";
                 String itemH = "";
-                itemL = result.substring(2, 6);
+                itemL = Objects.requireNonNull(result).substring(2, 6);
                 itemW = result.substring(6, 10);
                 itemH = result.substring(10, 14);
 
@@ -641,24 +641,24 @@ public class BluetoothLeService extends Service {
         String itemL = "";
         String length = DataManageUtils.getLWH(data, DataManageUtils.L3);
         int l = 0;
-        if (!length.equals("ffff")) {
-            l = Integer.parseInt(length, 16);
+        if (!"ffff".equals(length)) {
+            l = Integer.parseInt(Objects.requireNonNull(length), 16);
             double result = (double) l / 10;
             itemL = result + "";
         }
 
         String wStr = DataManageUtils.getLWH(data, DataManageUtils.W3);
         int w = 0;
-        if (!wStr.equals("ffff")) {
-            w = Integer.parseInt(wStr, 16);
+        if (!"ffff".equals(wStr)) {
+            w = Integer.parseInt(Objects.requireNonNull(wStr), 16);
             double result = (double) w / 10;
             itemW = result + "";
         }
 
         String hStr = DataManageUtils.getLWH(data, DataManageUtils.H3);
         int h = 0;
-        if (!hStr.equals("ffff")) {
-            h = Integer.parseInt(hStr, 16);
+        if (!"ffff".equals(hStr)) {
+            h = Integer.parseInt(Objects.requireNonNull(hStr), 16);
             double result = (double) h / 10;
             itemH = result + "";
         }
@@ -685,37 +685,37 @@ public class BluetoothLeService extends Service {
             String expressCode = DataManageUtils.getExpressCode(mByteNewList.get(3), mByteNewList.get(4));
             String barCode = "";
             if (!"ffffffffffffffffffffffffffffffffffffffff".equals(expressCode)) {
-                barCode = DataManageUtils.convertHexToString(expressCode).replace("\u0000", "");
+                barCode = DataManageUtils.convertHexToString(Objects.requireNonNull(expressCode)).replace("\u0000", "");
             }
 
             String branchCode = DataManageUtils.getBranchCode(mByteNewList.get(0));
             String wangDian = "";
-            if (!branchCode.equals("ffffffffffffffffffff")) {
-                wangDian = DataManageUtils.convertHexToString(branchCode).replace("\u0000", "");
+            if (!"ffffffffffffffffffff".equals(branchCode)) {
+                wangDian = DataManageUtils.convertHexToString(Objects.requireNonNull(branchCode)).replace("\u0000", "");
             }
 
             String centerCode = DataManageUtils.getCenterCode(mByteNewList.get(0), mByteNewList.get(1));
             String center = "";
-            if (!centerCode.equals("ffffffffffffffffffff")) {
-                center = DataManageUtils.convertHexToString(centerCode).replace("\u0000", "");
+            if (!"ffffffffffffffffffff".equals(centerCode)) {
+                center = DataManageUtils.convertHexToString(Objects.requireNonNull(centerCode)).replace("\u0000", "");
             }
 
             String muDiCode = DataManageUtils.getMuDiCode(mByteNewList.get(1));
             String muDi = "";
-            if (!muDiCode.equals("ffffffffffffffffffff")) {
-                muDi = DataManageUtils.convertHexToString(muDiCode).replace("\u0000", "");
+            if (!"ffffffffffffffffffff".equals(muDiCode)) {
+                muDi = DataManageUtils.convertHexToString(Objects.requireNonNull(muDiCode)).replace("\u0000", "");
             }
 
             String use = DataManageUtils.getUse(mByteNewList.get(1));
-            String liuCheng = DataManageUtils.convertHexToString(use);
+            String liuCheng = DataManageUtils.convertHexToString(Objects.requireNonNull(use));
 
             String mac = DataManageUtils.getMac(mByteNewList.get(6), mByteNewList.get(7));
             String identify = DataManageUtils.getIdentify(mByteNewList.get(7));
             String itemL = "";
             String length = DataManageUtils.getLWHG(mByteNewList.get(2), DataManageUtils.L);
             int l = 0;
-            if (!length.equals("ffff")) {
-                l = Integer.parseInt(length, 16);
+            if (!"ffff".equals(length)) {
+                l = Integer.parseInt(Objects.requireNonNull(length), 16);
                 double result = (double) l / 10;
                 itemL = result + "";
             }
@@ -728,24 +728,24 @@ public class BluetoothLeService extends Service {
                 //长宽高数据都有效(体积）
                 String wStr = DataManageUtils.getLWHG(mByteNewList.get(2), DataManageUtils.W);
                 int w = 0;
-                if (!wStr.equals("ffff")) {
-                    w = Integer.parseInt(wStr, 16);
+                if (!"ffff".equals(wStr)) {
+                    w = Integer.parseInt(Objects.requireNonNull(wStr), 16);
                     double result = (double) w / 10;
                     itemW = result + "";
                 }
 
                 String hStr = DataManageUtils.getLWHG(mByteNewList.get(2), DataManageUtils.H);
                 int h = 0;
-                if (!hStr.equals("ffff")) {
-                    h = Integer.parseInt(hStr, 16);
+                if (!"ffff".equals(hStr)) {
+                    h = Integer.parseInt(Objects.requireNonNull(hStr), 16);
                     double result = (double) h / 10;
                     itemH = result + "";
                 }
 
                 String vStr = DataManageUtils.getV(mByteNewList.get(2));
                 long v = 0;
-                if (!vStr.equals("ffffffff")) {
-                    v = Long.parseLong(vStr, 16);
+                if (!"ffffffff".equals(vStr)) {
+                    v = Long.parseLong(Objects.requireNonNull(vStr), 16);
                     double tijizhong = (double) v / 100;
                     itemV = tijizhong + "";
                 }
@@ -754,15 +754,15 @@ public class BluetoothLeService extends Service {
             String gStr = DataManageUtils.getLWHG(mByteNewList.get(2), DataManageUtils.G);
             String itemG = "";
             int g = 0;
-            if (!gStr.equals("ffff")) {
-                g = Integer.parseInt(gStr, 16);
+            if (!"ffff".equals(gStr)) {
+                g = Integer.parseInt(Objects.requireNonNull(gStr), 16);
                 itemG = g + "";
             }
 
             String time = DataManageUtils.getTime(mByteNewList.get(2));
             String timeResult = "";
-            if (!time.equals("ffffffffffff")) {
-                timeResult = "20" + time.substring(10, 12) + "-"
+            if (!"ffffffffffff".equals(time)) {
+                timeResult = "20" + Objects.requireNonNull(time).substring(10, 12) + "-"
                         + time.substring(8, 10) + "-"
                         + time.substring(6, 8) + " "
                         + time.substring(4, 6) + ":"
@@ -772,20 +772,20 @@ public class BluetoothLeService extends Service {
 
             String mainCode = DataManageUtils.getMainCode(mByteNewList.get(4), mByteNewList.get(5));
             String zhu = "";
-            if (!mainCode.equals("ffffffffffffffffffffffffffffffffffffffff")) {
-                zhu = DataManageUtils.convertHexToString(mainCode).replace("\u0000", "");
+            if (!"ffffffffffffffffffffffffffffffffffffffff".equals(mainCode)) {
+                zhu = DataManageUtils.convertHexToString(Objects.requireNonNull(mainCode)).replace("\u0000", "");
             }
 
             String sonCode = DataManageUtils.getSonCode(mByteNewList.get(5), mByteNewList.get(6));
             String zi = "";
-            if (!sonCode.equals("ffffffffffffffffffffffffffffffffffffffff")) {
-                zi = DataManageUtils.convertHexToString(sonCode).replace("\u0000", "");
+            if (!"ffffffffffffffffffffffffffffffffffffffff".equals(sonCode)) {
+                zi = DataManageUtils.convertHexToString(Objects.requireNonNull(sonCode)).replace("\u0000", "");
             }
 
             String flag = DataManageUtils.getFlag(mByteNewList.get(8));
             String biaoji = "";
             if (!"ff".equals(flag)) {
-                biaoji = DataManageUtils.convertHexToString(flag);
+                biaoji = DataManageUtils.convertHexToString(Objects.requireNonNull(flag));
             }
 
             String name = DataManageUtils.getName(mByteNewList.get(7), mByteNewList.get(8));
@@ -861,7 +861,7 @@ public class BluetoothLeService extends Service {
         }
 
         // Previously connected device.  Try to reconnect.以前连接设备。尝试重新连接。
-        if (mBluetoothDeviceAddress != null && address.equals(mBluetoothDeviceAddress)
+        if (address.equals(mBluetoothDeviceAddress)
                 && mBluetoothGatt != null) {
             Log.d(TAG, "Trying to use an existing mBluetoothGatt for connection.");
             if (mBluetoothGatt.connect()) {

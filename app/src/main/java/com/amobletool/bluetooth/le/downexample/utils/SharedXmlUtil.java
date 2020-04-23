@@ -9,6 +9,7 @@
 
 package com.amobletool.bluetooth.le.downexample.utils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -23,16 +24,18 @@ import com.amobletool.bluetooth.le.R;
  */
 public class SharedXmlUtil {
     public static SharedXmlUtil mSharedXmlUtil;
-    static byte[] lock = new byte[0];
+    static final byte[] lock = new byte[0];
     private SharedPreferences mShared;
     private Editor mEditor;
 
+    @SuppressLint("CommitPrefEdits")
     private SharedXmlUtil(Context context, String filename) {
         mShared = context.getSharedPreferences(filename,
                 Context.MODE_MULTI_PROCESS);
         mEditor = mShared.edit();
     }
 
+    @SuppressLint("CommitPrefEdits")
     private SharedXmlUtil(Context context) {
         mShared = context.getSharedPreferences(
                 context.getString(R.string.app_name),

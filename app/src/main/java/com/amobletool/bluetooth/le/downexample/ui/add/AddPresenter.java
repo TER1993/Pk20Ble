@@ -106,7 +106,7 @@ public class AddPresenter extends BasePresenterImpl<AddContract.View> implements
         }
         for (int i = 0; i < renWuNameList.size(); i++) {
             if (i != renWuNameList.size() - 1) {
-                renWuName.append(renWuNameList.get(i) + "\n");
+                renWuName.append(renWuNameList.get(i)).append("\n");
             } else {
                 renWuName.append(renWuNameList.get(i));
             }

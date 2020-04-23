@@ -6,7 +6,8 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+
+import androidx.annotation.Nullable;
 
 import com.amobletool.bluetooth.le.R;
 
@@ -45,11 +46,7 @@ public abstract class MVPBaseActivity<V extends BaseView,T extends BasePresenter
             return ((Class<T>) ((ParameterizedType) (o.getClass()
                     .getGenericSuperclass())).getActualTypeArguments()[i])
                     .newInstance();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (ClassCastException e) {
+        } catch (InstantiationException | IllegalAccessException | ClassCastException e) {
             e.printStackTrace();
         }
         return null;

@@ -1,21 +1,23 @@
 package com.amobletool.bluetooth.le.downexample.mvp;
 
 import android.app.ActivityManager;
-import android.content.Context;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+
+import androidx.annotation.Nullable;
 
 import com.amobletool.bluetooth.le.R;
 import com.amobletool.bluetooth.le.downexample.view.FlippingLoadingDialog;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * MVPPlugin
@@ -37,8 +39,9 @@ public abstract class MVPBaseFragment<V extends BaseView,T extends BasePresenter
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mPresenter!=null)
+        if (mPresenter!=null) {
             mPresenter.detachView();
+        }
     }
 
 
@@ -99,7 +102,7 @@ public abstract class MVPBaseFragment<V extends BaseView,T extends BasePresenter
         boolean isWork = false;
         ActivityManager myAM = (ActivityManager) mContext
                 .getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningServiceInfo> myList = myAM.getRunningServices(40);
+        List<ActivityManager.RunningServiceInfo> myList = Objects.requireNonNull(myAM).getRunningServices(40);
         if (myList.size() <= 0) {
             return false;
         }
@@ -135,13 +138,7 @@ public abstract class MVPBaseFragment<V extends BaseView,T extends BasePresenter
             return ((Class<T>) ((ParameterizedType) (o.getClass()
                     .getGenericSuperclass())).getActualTypeArguments()[i])
                     .newInstance();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (ClassCastException e) {
-            e.printStackTrace();
-        } catch (java.lang.InstantiationException e) {
+        } catch (InstantiationException | IllegalAccessException | ClassCastException | java.lang.InstantiationException e) {
             e.printStackTrace();
         }
         return null;

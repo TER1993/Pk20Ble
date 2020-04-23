@@ -1,5 +1,6 @@
 package speedata.com.blelib.utils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
 
@@ -22,7 +23,7 @@ public class PK20Utils {
      * @return 设置时间的发送数据
      */
     public static String getSetTimeData(long currentTimeMillis) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss E");
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss E");
         Date date = new Date(currentTimeMillis);
         String format = simpleDateFormat.format(date);
         String[] split = format.split(" ");
@@ -57,7 +58,7 @@ public class PK20Utils {
             return null;
         }
         int high = ratio >> 8 & 0xff;
-        int low = ratio >> 0 & 0xff;
+        int low = ratio & 0xff;
         String highStr = DataManageUtils.toHexString(high);
         String lowStr = DataManageUtils.toHexString(low);
         String jiaoYan = DataManageUtils.getJiaoYan(highStr, lowStr);
@@ -87,9 +88,9 @@ public class PK20Utils {
             return jiaoYanData;
         } else if (jiaoYanData == -3) {
             String[] splitData = data.split(" ");
-            if (splitData[3].equals("B1")) {
+            if ("B1".equals(splitData[3])) {
                 return -4;
-            } else if (splitData[3].equals("B2")) {
+            } else if ("B2".equals(splitData[3])) {
                 return -5;
             }
             return -1;
@@ -130,9 +131,9 @@ public class PK20Utils {
             return jiaoYanData;
         } else if (jiaoYanData == -3) {
             String[] splitData = data.split(" ");
-            if (splitData[3].equals("B1")) {
+            if ("B1".equals(splitData[3])) {
                 return -4;
-            } else if (splitData[3].equals("B2")) {
+            } else if ("B2".equals(splitData[3])) {
                 return -5;
             }
             return -1;
@@ -153,9 +154,9 @@ public class PK20Utils {
             return jiaoYanData;
         } else if (jiaoYanData == -3) {
             String[] splitData = data.split(" ");
-            if (splitData[3].equals("B1")) {
+            if ("B1".equals(splitData[3])) {
                 return -4;
-            } else if (splitData[3].equals("B2")) {
+            } else if ("B2".equals(splitData[3])) {
                 return -5;
             }
             return -1;
@@ -196,7 +197,7 @@ public class PK20Utils {
             return null;
         }
         int high = ratio >> 8 & 0xff;
-        int low = ratio >> 0 & 0xff;
+        int low = ratio & 0xff;
         String highStr = DataManageUtils.toHexString(high);
         String lowStr = DataManageUtils.toHexString(low);
         String jiaoYan = DataManageUtils.getJiaoYan(highStr, lowStr);
@@ -237,29 +238,27 @@ public class PK20Utils {
                 }
             }
             String hexString = String.valueOf(stringBuilder);
-            if (hexString != null) {
-                int dataCount = hexString.length() / 2 + 1;
-                String dataCountStr = DataManageUtils.toHexString(dataCount);
-                //1、第一条指令
-                StringBuilder data1 = new StringBuilder();
-                data1.append("FF1301B1").append(dataCountStr);
-                StringBuilder hexBuilder = new StringBuilder();
-                hexBuilder.append(hexString);
-                for (int i = 0; i < 32 - hexString.length(); i++) {
-                    hexBuilder.append("0");
-                }
-                String oneStr = hexBuilder.substring(0, 28);
-                data1.append(oneStr);
-                data1.append("00");
-                list.add(String.valueOf(data1));
-                //2
-                StringBuilder data2 = new StringBuilder();
-                String twoStr = hexBuilder.substring(28, hexBuilder.length());
-                String jiaoYan = DataManageUtils.getJiaoYan(hexString.substring(0, 2)
-                        , hexString.substring(hexString.length() - 2, hexString.length()));
-                data2.append("B2").append(twoStr).append("000000000000000000000000000000").append(jiaoYan).append("00");
-                list.add(String.valueOf(data2));
+            int dataCount = hexString.length() / 2 + 1;
+            String dataCountStr = DataManageUtils.toHexString(dataCount);
+            //1、第一条指令
+            StringBuilder data1 = new StringBuilder();
+            data1.append("FF1301B1").append(dataCountStr);
+            StringBuilder hexBuilder = new StringBuilder();
+            hexBuilder.append(hexString);
+            for (int i = 0; i < 32 - hexString.length(); i++) {
+                hexBuilder.append("0");
             }
+            String oneStr = hexBuilder.substring(0, 28);
+            data1.append(oneStr);
+            data1.append("00");
+            list.add(String.valueOf(data1));
+            //2
+            StringBuilder data2 = new StringBuilder();
+            String twoStr = hexBuilder.substring(28, hexBuilder.length());
+            String jiaoYan = DataManageUtils.getJiaoYan(hexString.substring(0, 2)
+                    , hexString.substring(hexString.length() - 2, hexString.length()));
+            data2.append("B2").append(twoStr).append("000000000000000000000000000000").append(jiaoYan).append("00");
+            list.add(String.valueOf(data2));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }

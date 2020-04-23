@@ -1,5 +1,6 @@
 package com.amobletool.bluetooth.le.downexample;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
@@ -37,6 +38,7 @@ import static speedata.com.blelib.service.BluetoothLeService.ACTION_GATT_DISCONN
 
 public class MyApp extends BaseBleApplication {
 
+    @SuppressLint("StaticFieldLeak")
     private static MyApp m_application; // 单例
     public ArrayList<Activity> aList = new ArrayList<>();
     public static String address = "";
@@ -73,7 +75,7 @@ public class MyApp extends BaseBleApplication {
 //            makeWordKu();
 //            SharedXmlUtil.getInstance(this).write("haveWord", true);
 //        }
-        cn = getApplicationContext().getResources().getConfiguration().locale.getCountry().equals("CN");
+        cn = "CN".equals(getApplicationContext().getResources().getConfiguration().locale.getCountry());
     }
 
 
@@ -83,7 +85,7 @@ public class MyApp extends BaseBleApplication {
 
 
     /**
-     * TODO(将所有已创建的Activity加入aList集合中)
+     * (将所有已创建的Activity加入aList集合中)
      */
     public void addActivity(Activity activity) {
 
@@ -93,7 +95,7 @@ public class MyApp extends BaseBleApplication {
     }
 
     /**
-     * TODO(将aList集合中已存在的Activity移除)
+     * (将aList集合中已存在的Activity移除)
      */
     public void deleteActivity(Activity activity) {
         if (compare(activity)) {
@@ -140,11 +142,11 @@ public class MyApp extends BaseBleApplication {
             final String action = intent.getAction();
             if (ACTION_GATT_CONNECTED.equals(action)) {
                 EventBus.getDefault().post(new MsgEvent("KP", false));
-                boolean cn = getApplicationContext().getResources().getConfiguration().locale.getCountry().equals("CN");
+                boolean cn = "CN".equals(getApplicationContext().getResources().getConfiguration().locale.getCountry());
 
                 Handler handler = new Handler();
                 handler.postDelayed(() -> {
-                    /**
+                    /*
                      *要执行的操作
                      */
                     if (cn) {
@@ -157,7 +159,7 @@ public class MyApp extends BaseBleApplication {
                 EventBus.getDefault().post(new MsgEvent("ServiceConnectedStatus", true));
             } else if (ACTION_GATT_DISCONNECTED.equals(action)) {
                 EventBus.getDefault().post(new MsgEvent("ServiceConnectedStatus", false));
-                boolean cn = getApplicationContext().getResources().getConfiguration().locale.getCountry().equals("CN");
+                boolean cn = "CN".equals(getApplicationContext().getResources().getConfiguration().locale.getCountry());
                 if (cn) {
                     Toast.makeText(getApplicationContext(), "已断开", Toast.LENGTH_LONG).show();
                 } else {
@@ -203,7 +205,7 @@ public class MyApp extends BaseBleApplication {
                                 mData.setMac(mPK20Data.mac);
                                 mData.setName(mPK20Data.name);
                                 MyApp.getDaoInstant().getDataDao().insertOrReplace(mData);
-                                boolean cn = getApplicationContext().getResources().getConfiguration().locale.getCountry().equals("CN");
+                                boolean cn = "CN".equals(getApplicationContext().getResources().getConfiguration().locale.getCountry());
                                 if (cn) {
                                     EventBus.getDefault().post(new MsgEvent("Save6DataSuccess", "数据存储成功"));
                                 } else {

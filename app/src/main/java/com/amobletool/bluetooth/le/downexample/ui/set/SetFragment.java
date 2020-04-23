@@ -4,15 +4,15 @@ package com.amobletool.bluetooth.le.downexample.ui.set;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
 
 import com.amobletool.bluetooth.le.R;
 import com.amobletool.bluetooth.le.downexample.bean.MsgEvent;
@@ -90,27 +90,27 @@ public class SetFragment extends MVPBaseFragment<SetContract.View, SetPresenter>
 
     @SuppressLint("SetTextI18n")
     private void initView(View view) {
-        btn_setTime = (Button) view.findViewById(R.id.btn_setTime);
+        btn_setTime = view.findViewById(R.id.btn_setTime);
         btn_setTime.setOnClickListener(this);
-        et_bili = (EditText) view.findViewById(R.id.et_bili);
-        btn_bili = (Button) view.findViewById(R.id.btn_bili);
+        et_bili = view.findViewById(R.id.et_bili);
+        btn_bili = view.findViewById(R.id.btn_bili);
         btn_bili.setOnClickListener(this);
-        btn_ziku = (Button) view.findViewById(R.id.btn_ziku);
+        btn_ziku = view.findViewById(R.id.btn_ziku);
         btn_ziku.setOnClickListener(this);
-        btn_clean = (Button) view.findViewById(R.id.btn_clean);
+        btn_clean = view.findViewById(R.id.btn_clean);
         btn_clean.setOnClickListener(this);
-        btn_clean_flash = (Button) view.findViewById(R.id.btn_clean_flash);
+        btn_clean_flash = view.findViewById(R.id.btn_clean_flash);
         btn_clean_flash.setOnClickListener(this);
-        et_bili_least = (EditText) view.findViewById(R.id.et_bili_least);
-        btn_bili_least = (Button) view.findViewById(R.id.btn_bili_least);
+        et_bili_least = view.findViewById(R.id.et_bili_least);
+        btn_bili_least = view.findViewById(R.id.btn_bili_least);
         btn_bili_least.setOnClickListener(this);
-        btn_logo = (Button) view.findViewById(R.id.btn_logo);
+        btn_logo = view.findViewById(R.id.btn_logo);
         btn_logo.setOnClickListener(this);
-        et_logo = (EditText) view.findViewById(R.id.et_logo);
-        btn_worker = (Button) view.findViewById(R.id.btn_worker);
+        et_logo = view.findViewById(R.id.et_logo);
+        btn_worker = view.findViewById(R.id.btn_worker);
         btn_worker.setOnClickListener(this);
-        et_worker = (EditText) view.findViewById(R.id.et_worker);
-        tv_version = (TextView) view.findViewById(R.id.tv_version);
+        et_worker = view.findViewById(R.id.et_worker);
+        tv_version = view.findViewById(R.id.tv_version);
         tv_version.setText("V" + Utils.getVerName(getActivity()));
     }
 
@@ -127,7 +127,7 @@ public class SetFragment extends MVPBaseFragment<SetContract.View, SetPresenter>
                 break;
             case R.id.btn_ziku: {
                 progressDialog = new ProgressDialog(getActivity());
-                boolean cn = getActivity().getApplicationContext().getResources().getConfiguration().locale.getCountry().equals("CN");
+                boolean cn = "CN".equals(getActivity().getApplicationContext().getResources().getConfiguration().locale.getCountry());
                 if (cn) {
                     progressDialog.setMessage("设置中...");
                 } else {
@@ -144,7 +144,7 @@ public class SetFragment extends MVPBaseFragment<SetContract.View, SetPresenter>
             case R.id.btn_logo: {
                 String logo = et_logo.getText().toString();
                 boolean isSpecial = StringUtils.isSpecial(logo);
-                boolean cn = getActivity().getApplicationContext().getResources().getConfiguration().locale.getCountry().equals("CN");
+                boolean cn = "CN".equals(getActivity().getApplicationContext().getResources().getConfiguration().locale.getCountry());
                 if (isSpecial) {
                     if (cn) {
                         Toast.makeText(getActivity(), "不能包含特殊符号", Toast.LENGTH_LONG).show();
@@ -200,7 +200,7 @@ public class SetFragment extends MVPBaseFragment<SetContract.View, SetPresenter>
             case R.id.btn_worker: {
                 String worker = et_worker.getText().toString();
                 boolean workerIsSpecial = StringUtils.isSpecial(worker);
-                boolean cn = getActivity().getApplicationContext().getResources().getConfiguration().locale.getCountry().equals("CN");
+                boolean cn = "CN".equals(getActivity().getApplicationContext().getResources().getConfiguration().locale.getCountry());
                 if (workerIsSpecial) {
                     if (cn) {
                         Toast.makeText(getActivity(), "不能包含特殊符号", Toast.LENGTH_LONG).show();
@@ -257,46 +257,30 @@ public class SetFragment extends MVPBaseFragment<SetContract.View, SetPresenter>
             case R.id.btn_clean_flash: {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 final EditText editText = new EditText(getActivity());
-                boolean cn = getActivity().getApplicationContext().getResources().getConfiguration().locale.getCountry().equals("CN");
+                boolean cn = "CN".equals(getActivity().getApplicationContext().getResources().getConfiguration().locale.getCountry());
                 builder.setView(editText);
                 if (cn) {
                     builder.setMessage("输入密码");
-                    builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
+                    builder.setNegativeButton("取消", (dialog, which) -> alertDialog.dismiss());
+                    builder.setPositiveButton("确定", (dialog, which) -> {
+                        String text = editText.getText().toString();
+                        if ("0000".equals(text)) {
+                            mPresenter.setCleanFlash();
                             alertDialog.dismiss();
-                        }
-                    });
-                    builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            String text = editText.getText().toString();
-                            if ("0000".equals(text)) {
-                                mPresenter.setCleanFlash();
-                                alertDialog.dismiss();
-                            } else {
-                                Toast.makeText(getActivity(), "密码错误", Toast.LENGTH_LONG).show();
-                            }
+                        } else {
+                            Toast.makeText(getActivity(), "密码错误", Toast.LENGTH_LONG).show();
                         }
                     });
                 } else {
                     builder.setMessage("Password");
-                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
+                    builder.setNegativeButton("Cancel", (dialog, which) -> alertDialog.dismiss());
+                    builder.setPositiveButton("Confirm", (dialog, which) -> {
+                        String text = editText.getText().toString();
+                        if ("0000".equals(text)) {
+                            mPresenter.setCleanFlash();
                             alertDialog.dismiss();
-                        }
-                    });
-                    builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            String text = editText.getText().toString();
-                            if ("0000".equals(text)) {
-                                mPresenter.setCleanFlash();
-                                alertDialog.dismiss();
-                            } else {
-                                Toast.makeText(getActivity(), "wrong password", Toast.LENGTH_LONG).show();
-                            }
+                        } else {
+                            Toast.makeText(getActivity(), "wrong password", Toast.LENGTH_LONG).show();
                         }
                     });
                 }

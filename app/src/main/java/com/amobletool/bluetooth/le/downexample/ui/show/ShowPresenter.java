@@ -8,6 +8,7 @@ import com.amobletool.bluetooth.le.downexample.interfaces.PK20Service;
 import com.amobletool.bluetooth.le.downexample.mvp.BasePresenterImpl;
 import com.google.gson.Gson;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Objects;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -73,14 +75,14 @@ public class ShowPresenter extends BasePresenterImpl<ShowContract.View> implemen
             Call<ResponseBody> insertbill = p.getInsertbill(requestBody);
             insertbill.enqueue(new Callback<ResponseBody>() {
                 @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
                     try {
-                        String result = response.body().string();
+                        String result = Objects.requireNonNull(response.body()).string();
                         Log.d("ZM", "onResponse: " + result);
                         if ("{\"Message\":\"Success\",\"Result\":0}".equals(result)) {
                             MyApp.getDaoInstant().getDataDao().deleteInTx(datas);
                             if (mView != null) {
-                                boolean cn = MyApp.getInstance().getResources().getConfiguration().locale.getCountry().equals("CN");
+                                boolean cn = "CN".equals(MyApp.getInstance().getResources().getConfiguration().locale.getCountry());
                                 if (cn) {
                                     mView.showToast("上传成功！");
                                 } else {
@@ -97,10 +99,10 @@ public class ShowPresenter extends BasePresenterImpl<ShowContract.View> implemen
                 }
 
                 @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable t) {
                     Log.d("ZM", "onFailure: " + t.toString());
                     if (mView != null) {
-                        boolean cn = MyApp.getInstance().getResources().getConfiguration().locale.getCountry().equals("CN");
+                        boolean cn = "CN".equals(MyApp.getInstance().getResources().getConfiguration().locale.getCountry());
                         if (cn) {
                             mView.showToast("上传失败：" + t.toString());
                         } else {

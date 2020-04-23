@@ -32,15 +32,12 @@ public class SetPresenter extends BasePresenterImpl<SetContract.View> implements
         String setTimeData = PK20Utils.getSetTimeData(currentTimeMillis);
         if (mNotifyCharacteristic3 != null) {
             MyApp.getInstance().writeCharacteristic3(setTimeData);
-            MyApp.getInstance().setGetBluetoothLeDataListener(new MyApp.getBluetoothLeDataListener() {
-                @Override
-                public void getData(String data) {
-                    int checkSetTimeBackData = PK20Utils.checkSetTimeBackData(data);
-                    seeResult(checkSetTimeBackData);
-                }
+            MyApp.getInstance().setGetBluetoothLeDataListener(data -> {
+                int checkSetTimeBackData = PK20Utils.checkSetTimeBackData(data);
+                seeResult(checkSetTimeBackData);
             });
         } else {
-            boolean cn = MyApp.getInstance().getResources().getConfiguration().locale.getCountry().equals("CN");
+            boolean cn = "CN".equals(MyApp.getInstance().getResources().getConfiguration().locale.getCountry());
             if (cn) {
                 EventBus.getDefault().post(new MsgEvent("Notification", "请连接设备"));
             } else {
@@ -54,14 +51,14 @@ public class SetPresenter extends BasePresenterImpl<SetContract.View> implements
     //检验返回的数据
     private void seeResult(int jiaoYanData) {
         if (jiaoYanData == 0) {
-            boolean cn = MyApp.getInstance().getResources().getConfiguration().locale.getCountry().equals("CN");
+            boolean cn = "CN".equals(MyApp.getInstance().getResources().getConfiguration().locale.getCountry());
             if (cn) {
                 EventBus.getDefault().post(new MsgEvent("Notification", "成功"));
             } else {
                 EventBus.getDefault().post(new MsgEvent("Notification", "Success"));
             }
         } else {
-            boolean cn = MyApp.getInstance().getResources().getConfiguration().locale.getCountry().equals("CN");
+            boolean cn = "CN".equals(MyApp.getInstance().getResources().getConfiguration().locale.getCountry());
             if (cn) {
                 EventBus.getDefault().post(new MsgEvent("Notification", "失败"));
             } else {
@@ -121,7 +118,7 @@ public class SetPresenter extends BasePresenterImpl<SetContract.View> implements
             int parseInt = Integer.parseInt(s);
             String setRatioData = PK20Utils.getSetRatioData(parseInt);
             if (TextUtils.isEmpty(setRatioData)) {
-                boolean cn = MyApp.getInstance().getResources().getConfiguration().locale.getCountry().equals("CN");
+                boolean cn = "CN".equals(MyApp.getInstance().getResources().getConfiguration().locale.getCountry());
                 if (cn) {
                     EventBus.getDefault().post(new MsgEvent("Notification", "请输入有效比例"));
                 } else {
@@ -131,15 +128,12 @@ public class SetPresenter extends BasePresenterImpl<SetContract.View> implements
             }
             if (mNotifyCharacteristic3 != null) {
                 MyApp.getInstance().writeCharacteristic3(setRatioData);
-                MyApp.getInstance().setGetBluetoothLeDataListener(new MyApp.getBluetoothLeDataListener() {
-                    @Override
-                    public void getData(String data) {
-                        int checkSetRatioBackData = PK20Utils.checkSetRatioBackData(data);
-                        seeResult(checkSetRatioBackData);
-                    }
+                MyApp.getInstance().setGetBluetoothLeDataListener(data -> {
+                    int checkSetRatioBackData = PK20Utils.checkSetRatioBackData(data);
+                    seeResult(checkSetRatioBackData);
                 });
             } else {
-                boolean cn = MyApp.getInstance().getResources().getConfiguration().locale.getCountry().equals("CN");
+                boolean cn = "CN".equals(MyApp.getInstance().getResources().getConfiguration().locale.getCountry());
                 if (cn) {
                     EventBus.getDefault().post(new MsgEvent("Notification", "请连接设备"));
                 } else {
@@ -148,7 +142,7 @@ public class SetPresenter extends BasePresenterImpl<SetContract.View> implements
             }
         } catch (NumberFormatException e) {
             e.printStackTrace();
-            boolean cn = MyApp.getInstance().getResources().getConfiguration().locale.getCountry().equals("CN");
+            boolean cn = "CN".equals(MyApp.getInstance().getResources().getConfiguration().locale.getCountry());
             if (cn) {
                 EventBus.getDefault().post(new MsgEvent("Notification", "请输入有效比例"));
             } else {
@@ -165,67 +159,48 @@ public class SetPresenter extends BasePresenterImpl<SetContract.View> implements
         count = 0;
         i = 0;
         if (mNotifyCharacteristic3 != null) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    sendData(ZiKuData.getData1(0), ZiKuData.getData2(0));
-                    MyApp.getInstance().setGetBluetoothLeDataListener(new MyApp.getBluetoothLeDataListener() {
-                        @Override
-                        public void getData(final String data) {
+            new Thread(() -> {
+                sendData(ZiKuData.getData1(0), ZiKuData.getData2(0));
+                MyApp.getInstance().setGetBluetoothLeDataListener(data -> {
 //                            timer.cancel();
-                            isSend = true;
-                            new Thread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    SystemClock.sleep(50);
-                                    if (count > 5) {
-                                        boolean cn = MyApp.getInstance().getResources().getConfiguration().locale.getCountry().equals("CN");
-                                        if (cn) {
-                                            EventBus.getDefault().post(new MsgEvent("Notification", "失败次数过多，请检查设备状态"));
-                                        } else {
-                                            EventBus.getDefault().post(new MsgEvent("Notification", "Too many failures, please check the status of the equipment."));
-                                        }
-                                        activity.runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                progressDialog.cancel();
-                                            }
-                                        });
-                                        return;
-                                    }
-                                    int result = checkMoreResult(data, ZiKuData.getData1(i),
-                                            ZiKuData.getData2(i), true);
-                                    if (result == 0) {
-                                        count = 0;
-                                        i++;
-                                        if (i == 69) {
-                                            activity.runOnUiThread(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    progressDialog.cancel();
-                                                }
-                                            });
-                                            boolean cn = MyApp.getInstance().getResources().getConfiguration().locale.getCountry().equals("CN");
-                                            if (cn) {
-                                                EventBus.getDefault().post(new MsgEvent("Notification", "设置成功"));
-                                            } else {
-                                                EventBus.getDefault().post(new MsgEvent("Notification", "Success"));
-                                            }
-                                            return;
-                                        }
-                                        sendData(ZiKuData.getData1(i), ZiKuData.getData2(i));
-                                        Log.d("ZM", "run: " + i);
-                                    }
-                                }
-                            }).start();
-
+                    isSend = true;
+                    new Thread(() -> {
+                        SystemClock.sleep(50);
+                        if (count > 5) {
+                            boolean cn = "CN".equals(MyApp.getInstance().getResources().getConfiguration().locale.getCountry());
+                            if (cn) {
+                                EventBus.getDefault().post(new MsgEvent("Notification", "失败次数过多，请检查设备状态"));
+                            } else {
+                                EventBus.getDefault().post(new MsgEvent("Notification", "Too many failures, please check the status of the equipment."));
+                            }
+                            activity.runOnUiThread(() -> progressDialog.cancel());
+                            return;
                         }
-                    });
-                }
+                        int result = checkMoreResult(data, ZiKuData.getData1(i),
+                                ZiKuData.getData2(i), true);
+                        if (result == 0) {
+                            count = 0;
+                            i++;
+                            if (i == 69) {
+                                activity.runOnUiThread(() -> progressDialog.cancel());
+                                boolean cn = "CN".equals(MyApp.getInstance().getResources().getConfiguration().locale.getCountry());
+                                if (cn) {
+                                    EventBus.getDefault().post(new MsgEvent("Notification", "设置成功"));
+                                } else {
+                                    EventBus.getDefault().post(new MsgEvent("Notification", "Success"));
+                                }
+                                return;
+                            }
+                            sendData(ZiKuData.getData1(i), ZiKuData.getData2(i));
+                            Log.d("ZM", "run: " + i);
+                        }
+                    }).start();
+
+                });
             }).start();
 
         } else {
-            boolean cn = MyApp.getInstance().getResources().getConfiguration().locale.getCountry().equals("CN");
+            boolean cn = "CN".equals(MyApp.getInstance().getResources().getConfiguration().locale.getCountry());
             if (cn) {
                 EventBus.getDefault().post(new MsgEvent("Notification", "请连接设备"));
             } else {
@@ -240,15 +215,12 @@ public class SetPresenter extends BasePresenterImpl<SetContract.View> implements
         String cleanData = PK20Utils.getCleanData();
         if (mNotifyCharacteristic3 != null) {
             MyApp.getInstance().writeCharacteristic3(cleanData);
-            MyApp.getInstance().setGetBluetoothLeDataListener(new MyApp.getBluetoothLeDataListener() {
-                @Override
-                public void getData(String data) {
-                    int checkCleanBackData = PK20Utils.checkCleanBackData(data);
-                    seeResult(checkCleanBackData);
-                }
+            MyApp.getInstance().setGetBluetoothLeDataListener(data -> {
+                int checkCleanBackData = PK20Utils.checkCleanBackData(data);
+                seeResult(checkCleanBackData);
             });
         } else {
-            boolean cn = MyApp.getInstance().getResources().getConfiguration().locale.getCountry().equals("CN");
+            boolean cn = "CN".equals(MyApp.getInstance().getResources().getConfiguration().locale.getCountry());
             if (cn) {
                 EventBus.getDefault().post(new MsgEvent("Notification", "请连接设备"));
             } else {
@@ -264,64 +236,45 @@ public class SetPresenter extends BasePresenterImpl<SetContract.View> implements
         count = 0;
         i = 0;
         if (mNotifyCharacteristic3 != null) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    sendData(logoData.get(0), logoData.get(1));
-                    MyApp.getInstance().setGetBluetoothLeDataListener(new MyApp.getBluetoothLeDataListener() {
-                        @Override
-                        public void getData(final String data) {
-                            isSend = true;
-                            new Thread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    SystemClock.sleep(50);
-                                    if (count > 5) {
-                                        activity.runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                progressDialog.cancel();
-                                            }
-                                        });
-                                        boolean cn = MyApp.getInstance().getResources().getConfiguration().locale.getCountry().equals("CN");
-                                        if (cn) {
-                                            EventBus.getDefault().post(new MsgEvent("Notification", "失败次数过多，请检查设备状态"));
-                                        } else {
-                                            EventBus.getDefault().post(new MsgEvent("Notification", "Too many failures, please check the status of the equipment."));
-                                        }
-                                        return;
-                                    }
-                                    int result = checkMoreResult(data, logoData.get(i), logoData.get(i + 1), false);
-                                    if (result == 0) {
-                                        count = 0;
-                                        i = i + 2;
-                                        if (i == logoData.size()) {
-                                            activity.runOnUiThread(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    progressDialog.cancel();
-                                                }
-                                            });
-                                            boolean cn = MyApp.getInstance().getResources().getConfiguration().locale.getCountry().equals("CN");
-                                            if (cn) {
-                                                EventBus.getDefault().post(new MsgEvent("Notification", "设置成功"));
-                                            } else {
-                                                EventBus.getDefault().post(new MsgEvent("Notification", "Success"));
-                                            }
-                                            return;
-                                        }
-                                        sendData(logoData.get(i), logoData.get(i + 1));
-                                    }
-                                }
-                            }).start();
-
+            new Thread(() -> {
+                sendData(logoData.get(0), logoData.get(1));
+                MyApp.getInstance().setGetBluetoothLeDataListener(data -> {
+                    isSend = true;
+                    new Thread(() -> {
+                        SystemClock.sleep(50);
+                        if (count > 5) {
+                            activity.runOnUiThread(() -> progressDialog.cancel());
+                            boolean cn = "CN".equals(MyApp.getInstance().getResources().getConfiguration().locale.getCountry());
+                            if (cn) {
+                                EventBus.getDefault().post(new MsgEvent("Notification", "失败次数过多，请检查设备状态"));
+                            } else {
+                                EventBus.getDefault().post(new MsgEvent("Notification", "Too many failures, please check the status of the equipment."));
+                            }
+                            return;
                         }
-                    });
-                }
+                        int result = checkMoreResult(data, logoData.get(i), logoData.get(i + 1), false);
+                        if (result == 0) {
+                            count = 0;
+                            i = i + 2;
+                            if (i == logoData.size()) {
+                                activity.runOnUiThread(() -> progressDialog.cancel());
+                                boolean cn = "CN".equals(MyApp.getInstance().getResources().getConfiguration().locale.getCountry());
+                                if (cn) {
+                                    EventBus.getDefault().post(new MsgEvent("Notification", "设置成功"));
+                                } else {
+                                    EventBus.getDefault().post(new MsgEvent("Notification", "Success"));
+                                }
+                                return;
+                            }
+                            sendData(logoData.get(i), logoData.get(i + 1));
+                        }
+                    }).start();
+
+                });
             }).start();
 
         } else {
-            boolean cn = MyApp.getInstance().getResources().getConfiguration().locale.getCountry().equals("CN");
+            boolean cn = "CN".equals(MyApp.getInstance().getResources().getConfiguration().locale.getCountry());
             if (cn) {
                 EventBus.getDefault().post(new MsgEvent("Notification", "请连接设备"));
             } else {
@@ -346,64 +299,45 @@ public class SetPresenter extends BasePresenterImpl<SetContract.View> implements
         count = 0;
         i = 0;
         if (mNotifyCharacteristic3 != null) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    sendData(nameData.get(0), nameData.get(1));
-                    MyApp.getInstance().setGetBluetoothLeDataListener(new MyApp.getBluetoothLeDataListener() {
-                        @Override
-                        public void getData(final String data) {
-                            isSend = true;
-                            new Thread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    SystemClock.sleep(50);
-                                    if (count > 5) {
-                                        activity.runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                progressDialog.cancel();
-                                            }
-                                        });
-                                        boolean cn = MyApp.getInstance().getResources().getConfiguration().locale.getCountry().equals("CN");
-                                        if (cn) {
-                                            EventBus.getDefault().post(new MsgEvent("Notification", "失败次数过多，请检查设备状态"));
-                                        } else {
-                                            EventBus.getDefault().post(new MsgEvent("Notification", "Too many failures, please check the status of the equipment."));
-                                        }
-                                        return;
-                                    }
-                                    int result = checkNameResult(data, nameData.get(i), nameData.get(i + 1));
-                                    if (result == 0) {
-                                        count = 0;
-                                        i = i + 2;
-                                        if (i == nameData.size()) {
-                                            activity.runOnUiThread(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    progressDialog.cancel();
-                                                }
-                                            });
-                                            boolean cn = MyApp.getInstance().getResources().getConfiguration().locale.getCountry().equals("CN");
-                                            if (cn) {
-                                                EventBus.getDefault().post(new MsgEvent("Notification", "设置成功"));
-                                            } else {
-                                                EventBus.getDefault().post(new MsgEvent("Notification", "Success"));
-                                            }
-                                            return;
-                                        }
-                                        sendData(nameData.get(i), nameData.get(i + 1));
-                                    }
-                                }
-                            }).start();
-
+            new Thread(() -> {
+                sendData(nameData.get(0), nameData.get(1));
+                MyApp.getInstance().setGetBluetoothLeDataListener(data -> {
+                    isSend = true;
+                    new Thread(() -> {
+                        SystemClock.sleep(50);
+                        if (count > 5) {
+                            activity.runOnUiThread(() -> progressDialog.cancel());
+                            boolean cn = "CN".equals(MyApp.getInstance().getResources().getConfiguration().locale.getCountry());
+                            if (cn) {
+                                EventBus.getDefault().post(new MsgEvent("Notification", "失败次数过多，请检查设备状态"));
+                            } else {
+                                EventBus.getDefault().post(new MsgEvent("Notification", "Too many failures, please check the status of the equipment."));
+                            }
+                            return;
                         }
-                    });
-                }
+                        int result = checkNameResult(data, nameData.get(i), nameData.get(i + 1));
+                        if (result == 0) {
+                            count = 0;
+                            i = i + 2;
+                            if (i == nameData.size()) {
+                                activity.runOnUiThread(() -> progressDialog.cancel());
+                                boolean cn = "CN".equals(MyApp.getInstance().getResources().getConfiguration().locale.getCountry());
+                                if (cn) {
+                                    EventBus.getDefault().post(new MsgEvent("Notification", "设置成功"));
+                                } else {
+                                    EventBus.getDefault().post(new MsgEvent("Notification", "Success"));
+                                }
+                                return;
+                            }
+                            sendData(nameData.get(i), nameData.get(i + 1));
+                        }
+                    }).start();
+
+                });
             }).start();
 
         } else {
-            boolean cn = MyApp.getInstance().getResources().getConfiguration().locale.getCountry().equals("CN");
+            boolean cn = "CN".equals(MyApp.getInstance().getResources().getConfiguration().locale.getCountry());
             if (cn) {
                 EventBus.getDefault().post(new MsgEvent("Notification", "请连接设备"));
             } else {
@@ -418,15 +352,12 @@ public class SetPresenter extends BasePresenterImpl<SetContract.View> implements
         String cleanData = PK20Utils.getCleanFlashData();
         if (mNotifyCharacteristic3 != null) {
             MyApp.getInstance().writeCharacteristic3(cleanData);
-            MyApp.getInstance().setGetBluetoothLeDataListener(new MyApp.getBluetoothLeDataListener() {
-                @Override
-                public void getData(String data) {
-                    int checkCleanFlashBackData = PK20Utils.checkCleanFlashBackData(data);
-                    seeResult(checkCleanFlashBackData);
-                }
+            MyApp.getInstance().setGetBluetoothLeDataListener(data -> {
+                int checkCleanFlashBackData = PK20Utils.checkCleanFlashBackData(data);
+                seeResult(checkCleanFlashBackData);
             });
         } else {
-            boolean cn = MyApp.getInstance().getResources().getConfiguration().locale.getCountry().equals("CN");
+            boolean cn = "CN".equals(MyApp.getInstance().getResources().getConfiguration().locale.getCountry());
             if (cn) {
                 EventBus.getDefault().post(new MsgEvent("Notification", "请连接设备"));
             } else {
@@ -440,7 +371,7 @@ public class SetPresenter extends BasePresenterImpl<SetContract.View> implements
         try {
             int parseInt = Integer.parseInt(s);
             if (parseInt > 10000) {
-                boolean cn = MyApp.getInstance().getResources().getConfiguration().locale.getCountry().equals("CN");
+                boolean cn = "CN".equals(MyApp.getInstance().getResources().getConfiguration().locale.getCountry());
                 if (cn) {
                     EventBus.getDefault().post(new MsgEvent("Notification", "请输入有效比例"));
                 } else {
@@ -450,7 +381,7 @@ public class SetPresenter extends BasePresenterImpl<SetContract.View> implements
             }
             String setRatioData = PK20Utils.getSetLeastRatioData(parseInt);
             if (TextUtils.isEmpty(setRatioData)) {
-                boolean cn = MyApp.getInstance().getResources().getConfiguration().locale.getCountry().equals("CN");
+                boolean cn = "CN".equals(MyApp.getInstance().getResources().getConfiguration().locale.getCountry());
                 if (cn) {
                     EventBus.getDefault().post(new MsgEvent("Notification", "请输入有效比例"));
                 } else {
@@ -460,15 +391,12 @@ public class SetPresenter extends BasePresenterImpl<SetContract.View> implements
             }
             if (mNotifyCharacteristic3 != null) {
                 MyApp.getInstance().writeCharacteristic3(setRatioData);
-                MyApp.getInstance().setGetBluetoothLeDataListener(new MyApp.getBluetoothLeDataListener() {
-                    @Override
-                    public void getData(String data) {
-                        int checkSetRatioBackData = PK20Utils.checkSetLeastRatioBackData(data);
-                        seeResult(checkSetRatioBackData);
-                    }
+                MyApp.getInstance().setGetBluetoothLeDataListener(data -> {
+                    int checkSetRatioBackData = PK20Utils.checkSetLeastRatioBackData(data);
+                    seeResult(checkSetRatioBackData);
                 });
             } else {
-                boolean cn = MyApp.getInstance().getResources().getConfiguration().locale.getCountry().equals("CN");
+                boolean cn = "CN".equals(MyApp.getInstance().getResources().getConfiguration().locale.getCountry());
                 if (cn) {
                     EventBus.getDefault().post(new MsgEvent("Notification", "请连接设备"));
                 } else {
@@ -477,7 +405,7 @@ public class SetPresenter extends BasePresenterImpl<SetContract.View> implements
             }
         } catch (NumberFormatException e) {
             e.printStackTrace();
-            boolean cn = MyApp.getInstance().getResources().getConfiguration().locale.getCountry().equals("CN");
+            boolean cn = "CN".equals(MyApp.getInstance().getResources().getConfiguration().locale.getCountry());
             if (cn) {
                 EventBus.getDefault().post(new MsgEvent("Notification", "请输入有效比例"));
             } else {
