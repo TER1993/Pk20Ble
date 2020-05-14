@@ -10,6 +10,9 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+/**
+ * @author xuyan
+ */
 public class ViewHolder {
 
     private final SparseArray<View> mViews;
@@ -18,7 +21,7 @@ public class ViewHolder {
 
     private ViewHolder(Context context, ViewGroup parent, int layoutId, int position) {
         this.mPosition = position;
-        this.mViews = new SparseArray<View>();
+        this.mViews = new SparseArray<>();
         mConvertView = LayoutInflater.from(context).inflate(layoutId, parent, false);
         mConvertView.setTag(this);
     }

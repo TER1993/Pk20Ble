@@ -9,18 +9,23 @@ import java.util.List;
 
 /**
  * MVPPlugin
- *  邮箱 784787081@qq.com
+ * 邮箱 784787081@qq.com
+ *
+ * @author xuyan
  */
 
 public class AddContract {
     interface View extends BaseView {
-        
+
     }
 
-    interface  Presenter extends BasePresenter<View> {
+    interface Presenter extends BasePresenter<View> {
         String word2Id(String str);
-        String getGuDingBiaoShi(boolean c1,boolean c2,boolean c3);
+
+        String getGuDingBiaoShi(boolean c1, boolean c2, boolean c3);
+
         String getRenWuCode(List<Spinner> spinnerList);
-        int saveLiuCheng(String id,String code,String name,String renWuCode,String renWuName);
+
+        int saveLiuCheng(String id, String code, String name, String renWuCode, String renWuName);
     }
 }

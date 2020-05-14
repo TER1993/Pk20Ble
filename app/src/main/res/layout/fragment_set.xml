@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        tools:ignore="UselessParent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:padding="10dp">
+            android:padding="10dp"
+            tools:ignore="ScrollViewSize">
 
             <Button
                 android:id="@+id/btn_setTime"
@@ -22,18 +25,18 @@
 
 
             <Button
-                android:visibility="gone"
                 android:id="@+id/btn_ziku"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="设置字库" />
+                android:text="设置字库"
+                android:visibility="gone" />
 
             <Button
-                android:visibility="gone"
                 android:id="@+id/btn_clean"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="清除流程" />
+                android:text="清除流程"
+                android:visibility="gone" />
 
             <Button
                 android:id="@+id/btn_clean_flash"
@@ -49,7 +52,8 @@
             <EditText
                 android:id="@+id/et_worker"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                tools:ignore="Autofill,LabelFor,TextFields" />
 
             <Button
                 android:id="@+id/btn_worker"
@@ -65,7 +69,8 @@
             <EditText
                 android:id="@+id/et_logo"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                tools:ignore="Autofill,LabelFor,TextFields" />
 
             <Button
                 android:id="@+id/btn_logo"
@@ -83,7 +88,8 @@
                 android:id="@+id/et_bili"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="number" />
+                android:inputType="number"
+                tools:ignore="Autofill,LabelFor" />
 
             <Button
                 android:id="@+id/btn_bili"
@@ -92,24 +98,25 @@
                 android:text="@string/set_bili" />
 
             <TextView
-                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="设置体积重最小值（小于100）" />
+                android:text="设置体积重最小值（小于100）"
+                android:visibility="gone" />
 
             <EditText
-                android:visibility="gone"
                 android:id="@+id/et_bili_least"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="number" />
+                android:inputType="number"
+                android:visibility="gone"
+                tools:ignore="Autofill,LabelFor" />
 
             <Button
-                android:visibility="gone"
                 android:id="@+id/btn_bili_least"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="设置体积重最小值" />
+                android:text="设置体积重最小值"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/tv_version"

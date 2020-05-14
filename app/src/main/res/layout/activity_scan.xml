@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".downexample.ui.scan.ScanActivity">
+
     <cn.bingoogolapple.qrcode.zbar.ZBarView
         android:id="@+id/qrView"
         android:layout_width="match_parent"
@@ -29,15 +29,13 @@
         app:qrcv_isShowTipTextAsSingleLine="false"
         app:qrcv_isTipTextBelowRect="true"
         app:qrcv_maskColor="#33FFFFFF"
+        app:qrcv_qrCodeTipText="@string/qrcode_text"
         app:qrcv_rectWidth="200dp"
         app:qrcv_scanLineColor="#00ffe6"
         app:qrcv_toolbarHeight="141dp"
-        app:qrcv_topOffset="20dp"
-        app:qrcv_qrCodeTipText="@string/qrcode_text"
-        />
-    <android.support.v7.widget.Toolbar
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+        app:qrcv_topOffset="20dp" />
+
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
@@ -45,9 +43,9 @@
         android:minHeight="?attr/actionBarSize"
         android:theme="@style/ThemeOverlay.AppCompat.Dark"
         app:layout_constraintEnd_toEndOf="parent"
-        app:title="@string/scan_barcode"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/qrView"
         app:navigationIcon="@drawable/ic_back"
-        app:titleTextColor="@android:color/white"/>
-</android.support.constraint.ConstraintLayout>
+        app:title="@string/scan_barcode"
+        app:titleTextColor="@android:color/white" />
+</androidx.constraintlayout.widget.ConstraintLayout>

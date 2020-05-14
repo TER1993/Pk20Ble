@@ -5,7 +5,8 @@ import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
 
 /**
- * Created by 张明_ on 2017/7/12.
+ * @author 张明_
+ * @date 2017/7/12
  */
 @Entity
 public class Word {

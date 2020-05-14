@@ -2,27 +2,28 @@ package com.amobletool.bluetooth.le.downexample.ui.assign;
 
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+
 import com.amobletool.bluetooth.le.R;
-import com.amobletool.bluetooth.le.downexample.bean.MsgEvent;
 import com.amobletool.bluetooth.le.downexample.MyApp;
 import com.amobletool.bluetooth.le.downexample.adapter.CommonAdapter;
 import com.amobletool.bluetooth.le.downexample.adapter.ViewHolder;
 import com.amobletool.bluetooth.le.downexample.bean.LiuCheng;
 import com.amobletool.bluetooth.le.downexample.bean.LiuChengDao;
+import com.amobletool.bluetooth.le.downexample.bean.MsgEvent;
 import com.amobletool.bluetooth.le.downexample.mvp.MVPBaseFragment;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import speedata.com.blelib.utils.DataManageUtils;
 
@@ -31,13 +32,17 @@ import static com.amobletool.bluetooth.le.downexample.MyApp.mNotifyCharacteristi
 /**
  * MVPPlugin
  * 邮箱 784787081@qq.com
+ *
+ * @author xuyan
  */
 
 public class AssignFragment extends MVPBaseFragment<AssignContract.View, AssignPresenter> implements
         AssignContract.View, AdapterView.OnItemClickListener, View.OnClickListener, AdapterView.OnItemLongClickListener {
 
     private ListView rv_content;
-    //    private Button btn_commit;
+
+    //private Button btn_commit;
+
     private CommonAdapter<LiuCheng> commonAdapter;
     private List<LiuCheng> liuChengs;
 
@@ -50,7 +55,7 @@ public class AssignFragment extends MVPBaseFragment<AssignContract.View, AssignP
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         View view = this.getView();
-        initView(view);
+        initView(Objects.requireNonNull(view));
         liuChengs = MyApp.getDaoInstant().getLiuChengDao().loadAll();
         for (int i = 0; i < liuChengs.size(); i++) {
             liuChengs.get(i).setIsCheck(null);
@@ -59,7 +64,7 @@ public class AssignFragment extends MVPBaseFragment<AssignContract.View, AssignP
     }
 
     private void initView(View view) {
-        rv_content = (ListView) view.findViewById(R.id.rv_content);
+        rv_content = view.findViewById(R.id.rv_content);
 //        btn_commit = (Button) view.findViewById(btn_commit);
 //        btn_commit.setOnClickListener(this);
     }
@@ -90,41 +95,30 @@ public class AssignFragment extends MVPBaseFragment<AssignContract.View, AssignP
     public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage("下达《" + liuChengs.get(position).getName() + "》流程");
-        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
+        builder.setNegativeButton("取消", (dialog, which) -> dialog.dismiss());
+        builder.setPositiveButton("确定", (dialog, which) -> {
+            if (mNotifyCharacteristic3 == null) {
+                EventBus.getDefault().post(new MsgEvent("Notification", "请连接设备"));
+                return;
             }
-        });
-        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (mNotifyCharacteristic3 == null) {
-                    EventBus.getDefault().post(new MsgEvent("Notification", "请连接设备"));
-                    return;
-                }
-                LiuCheng unique = MyApp.getDaoInstant().getLiuChengDao().queryBuilder()
-                        .where(LiuChengDao.Properties.Id.eq(liuChengs.get(position).getId())).unique();
-                final String renWuCode = unique.getCode();
-                MyApp.getInstance().writeCharacteristic3(renWuCode);
-                MyApp.getInstance().setGetBluetoothLeDataListener(new MyApp.getBluetoothLeDataListener() {
-                    @Override
-                    public void getData(String data) {
-                        int ff = DataManageUtils.jiaoYanData(data, "FF", "0A");
-                        if (ff == 0) {
-                            String[] split = data.split(" ");
-                            String zhilingCount = split[4];
-                            if ("01".equals(zhilingCount)) {
-                                Toast.makeText(getActivity(), "下达失败,指令已达上限", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(getActivity(), "下达成功", Toast.LENGTH_SHORT).show();
-                            }
-                        } else {
-                            Toast.makeText(getActivity(), "下达失败", Toast.LENGTH_SHORT).show();
-                        }
+            LiuCheng unique = MyApp.getDaoInstant().getLiuChengDao().queryBuilder()
+                    .where(LiuChengDao.Properties.Id.eq(liuChengs.get(position).getId())).unique();
+            final String renWuCode = unique.getCode();
+            MyApp.getInstance().writeCharacteristic3(renWuCode);
+            MyApp.getInstance().setGetBluetoothLeDataListener(data -> {
+                int ff = DataManageUtils.jiaoYanData(data, "FF", "0A");
+                if (ff == 0) {
+                    String[] split = data.split(" ");
+                    String zhilingCount = split[4];
+                    if ("01".equals(zhilingCount)) {
+                        Toast.makeText(getActivity(), "下达失败,指令已达上限", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getActivity(), "下达成功", Toast.LENGTH_SHORT).show();
                     }
-                });
-            }
+                } else {
+                    Toast.makeText(getActivity(), "下达失败", Toast.LENGTH_SHORT).show();
+                }
+            });
         });
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
@@ -157,30 +151,22 @@ public class AssignFragment extends MVPBaseFragment<AssignContract.View, AssignP
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         idList.clear();
         liuChengs.clear();
+        super.onDestroy();
     }
 
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage("删除《" + liuChengs.get(position).getName() + "》流程");
-        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                LiuCheng unique = MyApp.getDaoInstant().getLiuChengDao().queryBuilder()
-                        .where(LiuChengDao.Properties.Id.eq(liuChengs.get(position).getId())).unique();
-                MyApp.getDaoInstant().getLiuChengDao().delete(unique);
-                openFragment(new AssignFragment());
-                closeFragment();
-            }
+        builder.setNegativeButton("取消", (dialog, which) -> dialog.dismiss());
+        builder.setPositiveButton("确定", (dialog, which) -> {
+            LiuCheng unique = MyApp.getDaoInstant().getLiuChengDao().queryBuilder()
+                    .where(LiuChengDao.Properties.Id.eq(liuChengs.get(position).getId())).unique();
+            MyApp.getDaoInstant().getLiuChengDao().delete(unique);
+            openFragment(new AssignFragment());
+            closeFragment();
         });
         AlertDialog alertDialog = builder.create();
         alertDialog.show();

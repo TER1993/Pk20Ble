@@ -1,22 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_stada"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/tv_stada"/>
+        android:text="RSSI:" />
+
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="RSSI:"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/tv_rssi"
-        android:textSize="19sp"
-       />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="19sp" />
 
     <TextView
         android:layout_width="match_parent"
@@ -106,24 +109,29 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:divider="#8991e9"
-        android:dividerHeight="2px">
+        android:dividerHeight="2px"
+        tools:ignore="PxUsage">
 
     </ListView>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+
         <EditText
+            android:id="@+id/et_sen"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:id="@+id/et_sen"/>
+            tools:ignore="Autofill,LabelFor,TextFields" />
+
         <Button
+            android:id="@+id/btn_send"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/btn_send"
             android:layout_weight="4"
-            android:text="发送"/>
+            android:text="发送" />
 
     </LinearLayout>
 

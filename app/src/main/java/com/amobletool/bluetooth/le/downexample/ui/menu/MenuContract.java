@@ -5,15 +5,17 @@ import com.amobletool.bluetooth.le.downexample.mvp.BaseView;
 
 /**
  * MVPPlugin
- *  邮箱 784787081@qq.com
+ * 邮箱 784787081@qq.com
+ *
+ * @author xuyan
  */
 
 public class MenuContract {
     interface View extends BaseView {
-        
+
     }
 
-    interface  Presenter extends BasePresenter<View> {
+    interface Presenter extends BasePresenter<View> {
         void toggleOnCheckedChangeListener(boolean isCheck);
     }
 }

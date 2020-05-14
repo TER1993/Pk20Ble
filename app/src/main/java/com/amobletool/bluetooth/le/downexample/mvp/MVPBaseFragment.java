@@ -1,28 +1,32 @@
 package com.amobletool.bluetooth.le.downexample.mvp;
 
 import android.app.ActivityManager;
-import android.content.Context;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+
+import androidx.annotation.Nullable;
 
 import com.amobletool.bluetooth.le.R;
 import com.amobletool.bluetooth.le.downexample.view.FlippingLoadingDialog;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * MVPPlugin
- *  邮箱 784787081@qq.com
+ * 邮箱 784787081@qq.com
+ *
+ * @author xuyan
  */
 
-public abstract class MVPBaseFragment<V extends BaseView,T extends BasePresenterImpl<V>> extends Fragment implements BaseView{
+public abstract class MVPBaseFragment<V extends BaseView, T extends BasePresenterImpl<V>> extends Fragment implements BaseView {
     public T mPresenter;
     private static final int containerViewId = R.id.frame_main;
     private FlippingLoadingDialog mProgressDialog;
@@ -30,20 +34,22 @@ public abstract class MVPBaseFragment<V extends BaseView,T extends BasePresenter
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPresenter= getInstance(this,1);
+        mPresenter = getInstance(this, 1);
         mPresenter.attachView((V) this);
     }
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
-        if (mPresenter!=null)
+        if (mPresenter != null) {
             mPresenter.detachView();
+        }
+        super.onDestroy();
     }
 
 
     /**
      * 打开新的Fragment
+     *
      * @param fragment
      */
     public void openFragment(Fragment fragment) {
@@ -55,6 +61,7 @@ public abstract class MVPBaseFragment<V extends BaseView,T extends BasePresenter
         // 提交事物
         transaction.commit();
     }
+
     /**
      * 关闭Fragment
      */
@@ -64,7 +71,7 @@ public abstract class MVPBaseFragment<V extends BaseView,T extends BasePresenter
     }
 
 
-    public void showLoading(Context c,String text) {
+    public void showLoading(Context c, String text) {
         if (mProgressDialog == null) {
             mProgressDialog = new FlippingLoadingDialog(c, text);
         }
@@ -78,6 +85,7 @@ public abstract class MVPBaseFragment<V extends BaseView,T extends BasePresenter
         }
 
     }
+
     /**
      * 隐藏输入法
      */
@@ -99,7 +107,7 @@ public abstract class MVPBaseFragment<V extends BaseView,T extends BasePresenter
         boolean isWork = false;
         ActivityManager myAM = (ActivityManager) mContext
                 .getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningServiceInfo> myList = myAM.getRunningServices(40);
+        List<ActivityManager.RunningServiceInfo> myList = Objects.requireNonNull(myAM).getRunningServices(40);
         if (myList.size() <= 0) {
             return false;
         }
@@ -115,12 +123,14 @@ public abstract class MVPBaseFragment<V extends BaseView,T extends BasePresenter
 
 
     public abstract int getLayout();
+
     public View root;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View root=inflater.inflate(getLayout(),container,false);
-        this.root=root;
+        View root = inflater.inflate(getLayout(), container, false);
+        this.root = root;
         return root;
     }
 
@@ -130,18 +140,12 @@ public abstract class MVPBaseFragment<V extends BaseView,T extends BasePresenter
         return super.getContext();
     }
 
-    public  <T> T getInstance(Object o, int i) {
+    public <T> T getInstance(Object o, int i) {
         try {
-            return ((Class<T>) ((ParameterizedType) (o.getClass()
-                    .getGenericSuperclass())).getActualTypeArguments()[i])
+            return ((Class<T>) ((ParameterizedType) (Objects.requireNonNull(o.getClass()
+                    .getGenericSuperclass()))).getActualTypeArguments()[i])
                     .newInstance();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (ClassCastException e) {
-            e.printStackTrace();
-        } catch (java.lang.InstantiationException e) {
+        } catch (InstantiationException | IllegalAccessException | ClassCastException | java.lang.InstantiationException e) {
             e.printStackTrace();
         }
         return null;

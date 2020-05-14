@@ -8,7 +8,8 @@ import retrofit2.http.Body;
 import retrofit2.http.POST;
 
 /**
- * Created by 张明_ on 2017/11/24.
+ * @author 张明_
+ * @date 2017/11/24
  */
 
 public interface PK20Service {

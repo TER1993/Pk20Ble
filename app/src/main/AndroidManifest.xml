@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.amobletool.bluetooth.le">
 
     <!-- Declare this required feature if you want to make the app available to BLE-capable
@@ -23,14 +24,18 @@ limitations under the License.
     <uses-feature
         android:name="android.hardware.bluetooth"
         android:required="true" />
-    <uses-permission android:name="android.permission.CAMERA" />
+
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <!--动态申请位置权限-->
     <uses-permission-sdk-23 android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission-sdk-23 android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission-sdk-23 android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name=".downexample.MyApp"
@@ -38,30 +43,39 @@ limitations under the License.
         android:icon="@drawable/logo"
         android:label="@string/app_name"
         android:networkSecurityConfig="@xml/network_security_config"
-        android:theme="@android:style/Theme.Holo.Light">
+        android:theme="@android:style/Theme.Holo.Light"
+        tools:ignore="AllowBackup,UnusedAttribute">
         <activity
             android:name=".downexample.ui.DeviceScanActivity"
+            android:foregroundServiceType="location"
+            android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:label="@string/app_name"></activity>
+            tools:ignore="LockedOrientationActivity" />
 
         <activity
             android:name=".downexample.ui.menu.MenuActivity"
+            android:foregroundServiceType="location"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden">
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"
+            tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".downexample.ui.add.AddActivity"
+        <activity
+            android:name=".downexample.ui.add.AddActivity"
+            android:foregroundServiceType="location"
             android:screenOrientation="portrait"
-            />
+            tools:ignore="LockedOrientationActivity" />
 
-        <activity android:name=".downexample.ui.scan.ScanActivity"
+        <activity
+            android:name=".downexample.ui.scan.ScanActivity"
+            android:foregroundServiceType="location"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
-            />
+            tools:ignore="LockedOrientationActivity" />
 
     </application>
 </manifest>

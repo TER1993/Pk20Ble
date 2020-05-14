@@ -1,7 +1,8 @@
 package com.amobletool.bluetooth.le.downexample.bean;
 
 /**
- * Created by 张明_ on 2017/11/24.
+ * @author 张明_
+ * @date 2017/11/24
  */
 
 public class JsonData {

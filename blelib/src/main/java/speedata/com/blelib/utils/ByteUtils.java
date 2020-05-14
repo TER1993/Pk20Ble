@@ -2,10 +2,13 @@ package speedata.com.blelib.utils;
 
 
 import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * byte数据转换
- * Created by 张明_ on 2017/8/21.
+ *
+ * @author 张明_
+ * @date 2017/8/21
  * Email 741183142@qq.com
  */
 
@@ -62,7 +65,7 @@ public class ByteUtils {
      */
     public static int toInt(byte[] bytes) {
         String hexString = toHexString(bytes);
-        return Integer.parseInt(hexString, 16);
+        return Integer.parseInt(Objects.requireNonNull(hexString), 16);
     }
 
 

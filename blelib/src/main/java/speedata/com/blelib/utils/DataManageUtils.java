@@ -3,15 +3,16 @@ package speedata.com.blelib.utils;
 
 import android.content.Context;
 import android.content.res.AssetManager;
-import android.support.annotation.NonNull;
 
-import java.io.FileNotFoundException;
+import androidx.annotation.NonNull;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 
 /**
- * Created by 张明_ on 2017/7/5.
+ * @author 张明_
+ * @date 2017/7/5
  */
 
 public class DataManageUtils {
@@ -26,8 +27,8 @@ public class DataManageUtils {
         if (src == null || src.length <= 0) {
             return null;
         }
-        for (int i = 0; i < src.length; i++) {
-            int v = src[i] & 0xFF;
+        for (byte b : src) {
+            int v = b & 0xFF;
             String hv = Integer.toHexString(v);
             if (hv.length() < 2) {
                 stringBuilder.append(0);
@@ -346,12 +347,13 @@ public class DataManageUtils {
             } else {
                 skip++;
             }
-            if (end > 10)
+            if (end > 10) {
                 if (find[skip] != searched[index + skip] || find[end - skip] != searched[index + end - skip]) {
                     continue;
                 } else {
                     skip++;
                 }
+            }
             for (int subIndex = skip; subIndex < find.length - skip; ++subIndex) {
                 if (find[subIndex] != searched[index + subIndex]) {
                     matched = false;
@@ -403,8 +405,9 @@ public class DataManageUtils {
     //16进制转10进制
     public static int HexToInt(String strHex) {
         int nResult = 0;
-        if (!IsHex(strHex))
+        if (!IsHex(strHex)) {
             return nResult;
+        }
         String str = strHex.toUpperCase();
         if (str.length() > 2) {
             if (str.charAt(0) == '0' && str.charAt(1) == 'X') {
@@ -417,7 +420,6 @@ public class DataManageUtils {
             try {
                 nResult += (GetHex(ch) * GetPower(16, i));
             } catch (Exception e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
@@ -426,12 +428,15 @@ public class DataManageUtils {
 
     //计算16进制对应的数值
     public static int GetHex(char ch) throws Exception {
-        if (ch >= '0' && ch <= '9')
+        if (ch >= '0' && ch <= '9') {
             return (int) (ch - '0');
-        if (ch >= 'a' && ch <= 'f')
+        }
+        if (ch >= 'a' && ch <= 'f') {
             return (int) (ch - 'a' + 10);
-        if (ch >= 'A' && ch <= 'F')
+        }
+        if (ch >= 'A' && ch <= 'F') {
             return (int) (ch - 'A' + 10);
+        }
         throw new Exception("error param");
     }
 
@@ -552,9 +557,9 @@ public class DataManageUtils {
                 return -1;
             }
             if (!split[1].equals(zhiling)) {
-                if (split[1].equals("01")) {
+                if ("01".equals(split[1])) {
                     return -2;
-                } else if (split[1].equals("02")) {
+                } else if ("02".equals(split[1])) {
                     return -3;
                 }
                 return -1;
@@ -572,7 +577,7 @@ public class DataManageUtils {
             if (!split[18].equals(toHexString)) {
                 return -1;
             }
-            if (!split[3].equals("01")) {
+            if (!"01".equals(split[3])) {
                 return -1;
             }
             return 0;
@@ -597,9 +602,9 @@ public class DataManageUtils {
                 return -1;
             }
             if (!split[1].equals(zhiling)) {
-                if (split[1].equals("01")) {
+                if ("01".equals(split[1])) {
                     return -2;
-                } else if (split[1].equals("02")) {
+                } else if ("02".equals(split[1])) {
                     return -3;
                 }
                 return -1;
@@ -688,8 +693,8 @@ public class DataManageUtils {
         char[] chars = str.toCharArray();
 
         StringBuffer hex = new StringBuffer();
-        for (int i = 0; i < chars.length; i++) {
-            hex.append(Integer.toHexString((int) chars[i]));
+        for (char aChar : chars) {
+            hex.append(Integer.toHexString((int) aChar));
         }
 
         return hex.toString();
@@ -723,15 +728,12 @@ public class DataManageUtils {
      */
     public static byte uniteBytes(byte src0, byte src1) {
         try {
-            byte _b0 = Byte.decode("0x" + new String(new byte[]{src0}))
-                    .byteValue();
+            byte _b0 = Byte.decode("0x" + new String(new byte[]{src0}));
             _b0 = (byte) (_b0 << 4);
-            byte _b1 = Byte.decode("0x" + new String(new byte[]{src1}))
-                    .byteValue();
+            byte _b1 = Byte.decode("0x" + new String(new byte[]{src1}));
             byte ret = (byte) (_b0 ^ _b1);
             return ret;
         } catch (Exception e) {
-            // TODO: handle exception
             return 0;
         }
 
@@ -746,8 +748,8 @@ public class DataManageUtils {
         if (src == null || src.length <= 0) {
             return null;
         }
-        for (int i = 0; i < src.length; i++) {
-            int v = src[i] & 0xFF;
+        for (byte b : src) {
+            int v = b & 0xFF;
             String hv = Integer.toHexString(v);
             if (hv.length() < 2) {
                 stringBuilder.append(0);
@@ -798,8 +800,8 @@ public class DataManageUtils {
             InputStream inputStream = null;
             try {
                 inputStream = assetManager.open("Font_GB18030.bin");
-            } catch (IOException iOException) {
-                iOException.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
             if (inputStream != null) {
 //                inputStream.read(frameBuffer, offset, frameBuffer.length);
@@ -808,10 +810,8 @@ public class DataManageUtils {
             if (inputStream != null) {
                 inputStream.close();
             }
-        } catch (FileNotFoundException fileNotFoundException) {
+        } catch (IOException fileNotFoundException) {
             fileNotFoundException.printStackTrace();
-        } catch (IOException iOException) {
-            iOException.printStackTrace();
         }
 
         return arrayCopy(frameBuffer, offset, 32);
@@ -830,8 +830,8 @@ public class DataManageUtils {
             InputStream inputStream = null;
             try {
                 inputStream = assetManager.open("Font816.bin");
-            } catch (IOException iOException) {
-                iOException.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
             if (inputStream != null) {
                 inputStream.read(frameBuffer);
@@ -839,10 +839,8 @@ public class DataManageUtils {
             if (inputStream != null) {
                 inputStream.close();
             }
-        } catch (FileNotFoundException fileNotFoundException) {
+        } catch (IOException fileNotFoundException) {
             fileNotFoundException.printStackTrace();
-        } catch (IOException iOException) {
-            iOException.printStackTrace();
         }
 
         return arrayCopy(frameBuffer, offset, 16);

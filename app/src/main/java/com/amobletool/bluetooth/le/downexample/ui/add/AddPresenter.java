@@ -15,6 +15,8 @@ import java.util.List;
 /**
  * MVPPlugin
  * 邮箱 784787081@qq.com
+ *
+ * @author xuyan
  */
 
 public class AddPresenter extends BasePresenterImpl<AddContract.View> implements AddContract.Presenter {
@@ -92,7 +94,7 @@ public class AddPresenter extends BasePresenterImpl<AddContract.View> implements
             }
         }
         int parseInt = 0, parseInt2 = 0;
-        if (renWuList.size()==0){
+        if (renWuList.size() == 0) {
             return null;
         }
         for (int i = 0; i < renWuList.size(); i++) {
@@ -106,25 +108,25 @@ public class AddPresenter extends BasePresenterImpl<AddContract.View> implements
         }
         for (int i = 0; i < renWuNameList.size(); i++) {
             if (i != renWuNameList.size() - 1) {
-                renWuName.append(renWuNameList.get(i) + "\n");
+                renWuName.append(renWuNameList.get(i)).append("\n");
             } else {
                 renWuName.append(renWuNameList.get(i));
             }
         }
         int jiaoYan = parseInt + parseInt2;
         String jiaoYanStr = Integer.toHexString(jiaoYan);
-        if (jiaoYanStr.length()==1){
-            jiaoYanStr="0"+jiaoYanStr;
+        if (jiaoYanStr.length() == 1) {
+            jiaoYanStr = "0" + jiaoYanStr;
         }
         int length = renWuList.size() + 1;
-        return renWu + "-" + noRenWu + "-0" + length + "-" + jiaoYanStr+"-"+renWuName;
+        return renWu + "-" + noRenWu + "-0" + length + "-" + jiaoYanStr + "-" + renWuName;
     }
 
     //保存流程到pda数据库
     @Override
-    public int saveLiuCheng(String id,String code,String name,String renWuCode,String renWuName) {
+    public int saveLiuCheng(String id, String code, String name, String renWuCode, String renWuName) {
         try {
-            LiuCheng liuCheng=new LiuCheng();
+            LiuCheng liuCheng = new LiuCheng();
             liuCheng.setId(id);
             liuCheng.setCode(code);
             liuCheng.setName(name);

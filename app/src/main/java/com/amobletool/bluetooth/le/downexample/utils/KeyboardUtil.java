@@ -10,6 +10,9 @@ import android.widget.EditText;
 
 import com.amobletool.bluetooth.le.R;
 
+/**
+ * @author xuyan
+ */
 public class KeyboardUtil {
     private Context ctx;
     private Keyboard k1;// 字母键盘
@@ -48,13 +51,13 @@ public class KeyboardUtil {
         public void onText(CharSequence text) {
             Editable editable = ed.getText();
             int start = ed.getSelectionStart();
-            if ("DEL".equals(text)) {// 回退
+            if ("DEL".contentEquals(text)) {// 回退
                 if (editable != null && editable.length() > 0) {
                     if (start > 0) {
                         editable.delete(start - 1, start);
                     }
                 }
-            } else if ("完成".equals(text)) {
+            } else if ("完成".contentEquals(text)) {
                 hideKeyboard();
             } else {
                 if (start >= 6) {

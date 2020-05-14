@@ -73,10 +73,7 @@ public class StringUtils {
     public static boolean isNumber(String str) {
         Pattern pattern = Pattern.compile("[0-9]*");
         Matcher isNum = pattern.matcher(str);
-        if (!isNum.matches()) {
-            return false;
-        }
-        return true;
+        return isNum.matches();
     }
 
 
@@ -150,7 +147,7 @@ public class StringUtils {
      * @return byte[]
      */
     public static byte[] hexStringToByteArray(String hexString) {
-        if (hexString == null || hexString.equals("")) {
+        if (hexString == null || "".equals(hexString)) {
             return null;
         }
         hexString = hexString.toUpperCase();

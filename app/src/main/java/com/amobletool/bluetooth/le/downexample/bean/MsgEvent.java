@@ -1,22 +1,25 @@
 package com.amobletool.bluetooth.le.downexample.bean;
 
 
+/**
+ * @author xuyan
+ */
 public class MsgEvent {
-	private String type;
-	private Object data;
+    private String type;
+    private Object data;
 
-	public MsgEvent(String type, Object data) {
-		super();
-		this.data = data;
-		this.type = type;
-	}
+    public MsgEvent(String type, Object data) {
+        super();
+        this.data = data;
+        this.type = type;
+    }
 
-	public Object getMsg() {
-		return data;
-	}
+    public Object getMsg() {
+        return data;
+    }
 
-	public String getType() {
-		return type;
-	}
+    public String getType() {
+        return type;
+    }
 
 }

@@ -6,68 +6,67 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.view.Menu;
-import android.view.MenuItem;
+
+import androidx.annotation.Nullable;
 
 import com.amobletool.bluetooth.le.R;
-import com.amobletool.bluetooth.le.downexample.ui.DeviceScanActivity;
 
 import java.lang.reflect.ParameterizedType;
+import java.util.Objects;
 
 
 /**
  * MVPPlugin
- *  邮箱 784787081@qq.com
+ * 邮箱 784787081@qq.com
+ *
+ * @author xuyan
  */
 
-public abstract class MVPBaseActivity<V extends BaseView,T extends BasePresenterImpl<V>> extends Activity implements BaseView{
+public abstract class MVPBaseActivity<V extends BaseView, T extends BasePresenterImpl<V>> extends Activity implements BaseView {
     public T mPresenter;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPresenter= getInstance(this,1);
+        mPresenter = getInstance(this, 1);
         mPresenter.attachView((V) this);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mPresenter!=null)
-        mPresenter.detachView();
+        if (mPresenter != null) {
+            mPresenter.detachView();
+        }
     }
 
     @Override
-    public Context getContext(){
+    public Context getContext() {
         return this;
     }
 
-    public  <T> T getInstance(Object o, int i) {
+    public <T> T getInstance(Object o, int i) {
         try {
-            return ((Class<T>) ((ParameterizedType) (o.getClass()
-                    .getGenericSuperclass())).getActualTypeArguments()[i])
+            return ((Class<T>) ((ParameterizedType) (Objects.requireNonNull(o.getClass()
+                    .getGenericSuperclass()))).getActualTypeArguments()[i])
                     .newInstance();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (ClassCastException e) {
+        } catch (InstantiationException | IllegalAccessException | ClassCastException e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public void openAct(Context packageContext, Class<?> cls){
-        Intent intent=new Intent(packageContext,cls);
+    public void openAct(Context packageContext, Class<?> cls) {
+        Intent intent = new Intent(packageContext, cls);
         startActivity(intent);
     }
 
 
-
-
     private static final int containerViewId = R.id.frame_main;
+
     /**
      * 打开新的Fragment
+     *
      * @param fragment
      */
     public void openFragment(Fragment fragment) {
@@ -79,6 +78,7 @@ public abstract class MVPBaseActivity<V extends BaseView,T extends BasePresenter
         // 提交事物
         transaction.commit();
     }
+
     /**
      * 关闭Fragment
      */

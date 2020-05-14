@@ -32,8 +32,6 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -44,6 +42,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
 import com.amobletool.bluetooth.le.R;
 import com.amobletool.bluetooth.le.downexample.MyApp;
 import com.amobletool.bluetooth.le.downexample.ui.scan.ScanActivity;
@@ -52,9 +53,12 @@ import com.scandecode.inf.ScanInterface;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Activity for scanning and displaying available Bluetooth LE devices.
+ *
+ * @author xuyan
  */
 @SuppressLint("NewApi")
 public class DeviceScanActivity extends ListActivity {
@@ -78,7 +82,7 @@ public class DeviceScanActivity extends ListActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getActionBar().setTitle(R.string.title_devices);
+        Objects.requireNonNull(getActionBar()).setTitle(R.string.title_devices);
         mHandler = new Handler();
 
         // 检查当前手机是否支持ble 蓝牙,如果不支持退出程序
@@ -89,7 +93,7 @@ public class DeviceScanActivity extends ListActivity {
 
         // 初始化 Bluetooth adapter, 通过蓝牙管理器得到一个参考蓝牙适配器(API必须在以上android4.3或以上和版本)
         final BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-        mBluetoothAdapter = bluetoothManager.getAdapter();
+        mBluetoothAdapter = Objects.requireNonNull(bluetoothManager).getAdapter();
         mBluetoothLeScanner = mBluetoothAdapter.getBluetoothLeScanner();
 
         // 检查设备上是否支持蓝牙
@@ -104,10 +108,9 @@ public class DeviceScanActivity extends ListActivity {
             if (ContextCompat.checkSelfPermission(this,
                     Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 //判断是否需要向用户解释为什么需要申请该权限
-                if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                        Manifest.permission.ACCESS_COARSE_LOCATION)) {
-//                    showToast("自Android 6.0开始需要打开位置权限才可以搜索到Ble设备");
-                }
+                ActivityCompat.shouldShowRequestPermissionRationale(this,
+                        Manifest.permission.ACCESS_COARSE_LOCATION);
+                //showToast("自Android 6.0开始需要打开位置权限才可以搜索到Ble设备");
                 //请求权限
                 ActivityCompat.requestPermissions(this,
                         new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
@@ -144,8 +147,8 @@ public class DeviceScanActivity extends ListActivity {
     private void reScan(String scan) {
         Handler handler = new Handler();
         handler.postDelayed(() -> {
-            /**
-             *要执行的操作
+            /*
+             *要执行的操作 0.1秒后执行Runnable中的run方法
              */
             if (!stopscan) {
                 runOnUiThread(() -> {
@@ -155,15 +158,15 @@ public class DeviceScanActivity extends ListActivity {
                 });
             }
 
-        }, 4000); //0.1秒后执行Runnable中的run方法
+        }, 4000);
 
     }
 
     private void firstScan(String scan) {
         Handler handler = new Handler();
         handler.postDelayed(() -> {
-            /**
-             *要执行的操作
+            /*
+             *要执行的操作  0.1秒后执行Runnable中的run方法
              */
             if (!stopscan) {
                 runOnUiThread(() -> {
@@ -171,14 +174,14 @@ public class DeviceScanActivity extends ListActivity {
                     scanResult(scan);
                 });
             }
-        }, 1000); //0.1秒后执行Runnable中的run方法
+        }, 1000);
     }
 
     private void scanScan(String scan) {
         Handler handler = new Handler();
         handler.postDelayed(() -> {
-            /**
-             *要执行的操作
+            /*
+             *要执行的操作 0.1秒后执行Runnable中的run方法
              */
             if (!stopscan) {
                 runOnUiThread(() -> {
@@ -186,7 +189,7 @@ public class DeviceScanActivity extends ListActivity {
                     reScan(scan);
                 });
             }
-        }, 1000); //0.1秒后执行Runnable中的run方法
+        }, 1000);
     }
 
 
@@ -391,8 +394,8 @@ public class DeviceScanActivity extends ListActivity {
             if (view == null) {
                 view = mInflator.inflate(R.layout.listitem_device, null);
                 viewHolder = new ViewHolder();
-                viewHolder.deviceAddress = (TextView) view.findViewById(R.id.device_address);
-                viewHolder.deviceName = (TextView) view.findViewById(R.id.device_name);
+                viewHolder.deviceAddress = view.findViewById(R.id.device_address);
+                viewHolder.deviceName = view.findViewById(R.id.device_name);
                 view.setTag(viewHolder);
             } else {
                 viewHolder = (ViewHolder) view.getTag();

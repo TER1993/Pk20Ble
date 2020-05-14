@@ -1,17 +1,19 @@
 package com.amobletool.bluetooth.le.downexample.ui.show;
 
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.amobletool.bluetooth.le.R;
 import com.amobletool.bluetooth.le.downexample.MyApp;
@@ -30,6 +32,9 @@ import java.util.List;
 import xyz.reginer.baseadapter.CommonRvAdapter;
 
 
+/**
+ * @author xuyan
+ */
 public class ShowFragment extends MVPBaseFragment<ShowContract.View, ShowPresenter>
         implements ShowContract.View, CommonRvAdapter.OnItemClickListener {
 
@@ -50,10 +55,12 @@ public class ShowFragment extends MVPBaseFragment<ShowContract.View, ShowPresent
         EventBus.getDefault().register(this);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         View view = this.getView();
+        assert view != null;
         initView(view);
         datas = MyApp.getDaoInstant().getDataDao().loadAll();
         tv_countNum.setText(datas.size() + "");
@@ -61,32 +68,29 @@ public class ShowFragment extends MVPBaseFragment<ShowContract.View, ShowPresent
     }
 
     private void initView(View view) {
-        rv_content = (RecyclerView) view.findViewById(R.id.rv_content);
-        tv_countNum = (TextView) view.findViewById(R.id.tv_countNum);
-        btn_upIntent = (Button) view.findViewById(R.id.btn_upIntent);
+        rv_content = view.findViewById(R.id.rv_content);
+        tv_countNum = view.findViewById(R.id.tv_countNum);
+        btn_upIntent = view.findViewById(R.id.btn_upIntent);
         btn_upIntent.setClickable(true);
-        btn_upIntent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (datas.size() == 0) {
-                    boolean cn = getActivity().getApplicationContext().getResources().getConfiguration().locale.getCountry().equals("CN");
-                    if (cn) {
-                        Toast.makeText(getActivity(), "无数据上传", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(getActivity(), "No data uploaded", Toast.LENGTH_SHORT).show();
-                    }
-
-                    return;
+        btn_upIntent.setOnClickListener(v -> {
+            if (datas.size() == 0) {
+                boolean cn = "CN".equals(getActivity().getApplicationContext().getResources().getConfiguration().locale.getCountry());
+                if (cn) {
+                    Toast.makeText(getActivity(), "无数据上传", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getActivity(), "No data uploaded", Toast.LENGTH_SHORT).show();
                 }
-                btn_upIntent.setClickable(false);
-                kProgressHUD = KProgressHUD.create(getActivity())
-                        .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
-                        .setCancellable(false)
-                        .setAnimationSpeed(2)
-                        .setDimAmount(0.5f)
-                        .show();
-                mPresenter.upIntent(datas);
+
+                return;
             }
+            btn_upIntent.setClickable(false);
+            kProgressHUD = KProgressHUD.create(getActivity())
+                    .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
+                    .setCancellable(false)
+                    .setAnimationSpeed(2)
+                    .setDimAmount(0.5f)
+                    .show();
+            mPresenter.upIntent(datas);
         });
     }
 
@@ -136,11 +140,11 @@ public class ShowFragment extends MVPBaseFragment<ShowContract.View, ShowPresent
         super.onResume();
         Handler handler = new Handler();
         handler.postDelayed(() -> {
-            /**
-             *要执行的操作
+            /*
+             *要执行的操作 ,0.1秒后执行Runnable中的run方法
              */
             mAdapter.notifyDataSetChanged();
-        }, 100); //0.1秒后执行Runnable中的run方法
+        }, 100);
 
     }
 

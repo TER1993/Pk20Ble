@@ -26,7 +26,9 @@ import static speedata.com.blelib.service.BluetoothLeService.ACTION_GATT_CONNECT
 import static speedata.com.blelib.service.BluetoothLeService.ACTION_GATT_DISCONNECTED;
 
 /**
- * Created by 张明_ on 2017/9/5.
+ *
+ * @author 张明_
+ * @date 2017/9/5
  */
 
 public class BaseBleApplication extends Application {
@@ -202,10 +204,10 @@ public class BaseBleApplication extends Application {
             List<BluetoothGattCharacteristic> gattCharacteristics = gattService.getCharacteristics();
             for (BluetoothGattCharacteristic gattCharacteristic : gattCharacteristics) {
                 uuid = gattCharacteristic.getUuid().toString();
-                if (uuid.equals("0000fff3-0000-1000-8000-00805f9b34fb")) {
+                if ("0000fff3-0000-1000-8000-00805f9b34fb".equals(uuid)) {
                     mNotifyCharacteristic3 = gattCharacteristic;
                     setCharacteristicNotification(mNotifyCharacteristic3, true);
-                } else if (uuid.equals("0000fff6-0000-1000-8000-00805f9b34fb")) {
+                } else if ("0000fff6-0000-1000-8000-00805f9b34fb".equals(uuid)) {
                     mNotifyCharacteristic6 = gattCharacteristic;
                     setCharacteristicNotification(mNotifyCharacteristic6, true);
                 }

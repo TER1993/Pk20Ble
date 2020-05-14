@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -8,7 +9,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        tools:ignore="DisableBaselineAlignment,UselessParent">
 
         <LinearLayout
             android:id="@+id/ll_barCode"
@@ -34,7 +36,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
-                    android:src="@drawable/shuxian" />
+                    android:src="@drawable/shuxian"
+                    tools:ignore="ContentDescription" />
 
                 <TextView
                     android:id="@+id/tv_barCode"
@@ -64,7 +67,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
-                    android:src="@drawable/shuxian" />
+                    android:src="@drawable/shuxian"
+                    tools:ignore="ContentDescription" />
 
                 <TextView
                     android:id="@+id/tv_name"
@@ -94,7 +98,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
-                    android:src="@drawable/shuxian" />
+                    android:src="@drawable/shuxian"
+                    tools:ignore="ContentDescription" />
 
                 <TextView
                     android:id="@+id/tv_zhu"
@@ -124,7 +129,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
-                    android:src="@drawable/shuxian" />
+                    android:src="@drawable/shuxian"
+                    tools:ignore="ContentDescription" />
 
                 <TextView
                     android:id="@+id/tv_zi"
@@ -154,7 +160,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
-                    android:src="@drawable/shuxian" />
+                    android:src="@drawable/shuxian"
+                    tools:ignore="ContentDescription" />
 
                 <TextView
                     android:id="@+id/tv_wangdian"
@@ -184,7 +191,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
-                    android:src="@drawable/shuxian" />
+                    android:src="@drawable/shuxian"
+                    tools:ignore="ContentDescription" />
 
                 <TextView
                     android:id="@+id/tv_center"
@@ -214,7 +222,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
-                    android:src="@drawable/shuxian" />
+                    android:src="@drawable/shuxian"
+                    tools:ignore="ContentDescription" />
 
                 <TextView
                     android:id="@+id/tv_mudi"
@@ -244,7 +253,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
-                    android:src="@drawable/shuxian" />
+                    android:src="@drawable/shuxian"
+                    tools:ignore="ContentDescription" />
 
                 <TextView
                     android:id="@+id/tv_time"
@@ -275,7 +285,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
-                    android:src="@drawable/shuxian" />
+                    android:src="@drawable/shuxian"
+                    tools:ignore="ContentDescription" />
 
                 <TextView
                     android:id="@+id/tv_l"
@@ -305,7 +316,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
-                    android:src="@drawable/shuxian" />
+                    android:src="@drawable/shuxian"
+                    tools:ignore="ContentDescription" />
 
                 <TextView
                     android:id="@+id/tv_w"
@@ -335,7 +347,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
-                    android:src="@drawable/shuxian" />
+                    android:src="@drawable/shuxian"
+                    tools:ignore="ContentDescription" />
 
                 <TextView
                     android:id="@+id/tv_h"
@@ -365,7 +378,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
-                    android:src="@drawable/shuxian" />
+                    android:src="@drawable/shuxian"
+                    tools:ignore="ContentDescription" />
 
                 <TextView
                     android:id="@+id/tv_v"
@@ -396,7 +410,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
-                    android:src="@drawable/shuxian" />
+                    android:src="@drawable/shuxian"
+                    tools:ignore="ContentDescription" />
 
                 <TextView
                     android:id="@+id/tv_g"
@@ -427,7 +442,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
-                    android:src="@drawable/shuxian" />
+                    android:src="@drawable/shuxian"
+                    tools:ignore="ContentDescription" />
 
                 <TextView
                     android:id="@+id/tv_biaoshi"
@@ -457,7 +473,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
-                    android:src="@drawable/shuxian" />
+                    android:src="@drawable/shuxian"
+                    tools:ignore="ContentDescription" />
 
                 <TextView
                     android:id="@+id/tv_mac"

@@ -12,7 +12,9 @@ import xyz.reginer.baseadapter.BaseAdapterHelper;
 import xyz.reginer.baseadapter.CommonRvAdapter;
 
 /**
- * Created by 张明_ on 2017/7/14.
+ *
+ * @author 张明_
+ * @date 2017/7/14
  */
 
 public class RVAdapter extends CommonRvAdapter<Data> {
@@ -43,7 +45,7 @@ public class RVAdapter extends CommonRvAdapter<Data> {
 
     private void setUi(BaseAdapterHelper helper, String wangDian, int viewId, int ll) {
         wangDian = wangDian.replace("\u0000", "");
-        if (TextUtils.isEmpty(wangDian) || wangDian.equals("")) {
+        if (TextUtils.isEmpty(wangDian) || "".equals(wangDian)) {
             helper.setVisible(ll, false);
         } else {
             helper.setVisible(ll, true);

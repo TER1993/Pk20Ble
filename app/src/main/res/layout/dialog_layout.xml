@@ -4,18 +4,20 @@
     android:layout_height="match_parent"
     android:background="#ffff"
     android:orientation="vertical">
-  <TextView
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:gravity="center"
-      android:text="详细信息"
-      android:background="#447881ca"
-      android:textSize="30sp"
-      android:id="@+id/tv_dialog_title"/>
-  <TextView
-      android:layout_width="match_parent"
-      android:background="#55dadada"
-      android:textSize="20sp"
-      android:layout_height="wrap_content"
-      android:id="@+id/tv_dialog_message"/>
+
+    <TextView
+        android:id="@+id/tv_dialog_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#447881ca"
+        android:gravity="center"
+        android:text="详细信息"
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/tv_dialog_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#55dadada"
+        android:textSize="20sp" />
 </LinearLayout>

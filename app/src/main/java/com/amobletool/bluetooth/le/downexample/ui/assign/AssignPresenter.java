@@ -4,9 +4,11 @@ import com.amobletool.bluetooth.le.downexample.mvp.BasePresenterImpl;
 
 /**
  * MVPPlugin
- *  邮箱 784787081@qq.com
+ * 邮箱 784787081@qq.com
+ *
+ * @author xuyan
  */
 
-public class AssignPresenter extends BasePresenterImpl<AssignContract.View> implements AssignContract.Presenter{
-    
+public class AssignPresenter extends BasePresenterImpl<AssignContract.View> implements AssignContract.Presenter {
+
 }

@@ -1,5 +1,6 @@
 package com.amobletool.bluetooth.le.downexample;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
@@ -32,11 +33,13 @@ import static speedata.com.blelib.service.BluetoothLeService.ACTION_GATT_CONNECT
 import static speedata.com.blelib.service.BluetoothLeService.ACTION_GATT_DISCONNECTED;
 
 /**
- * Created by 张明_ on 2017/7/10.
+ * @author 张明_
+ * @date 2017/7/10
  */
 
 public class MyApp extends BaseBleApplication {
 
+    @SuppressLint("StaticFieldLeak")
     private static MyApp m_application; // 单例
     public ArrayList<Activity> aList = new ArrayList<>();
     public static String address = "";
@@ -73,7 +76,7 @@ public class MyApp extends BaseBleApplication {
 //            makeWordKu();
 //            SharedXmlUtil.getInstance(this).write("haveWord", true);
 //        }
-        cn = getApplicationContext().getResources().getConfiguration().locale.getCountry().equals("CN");
+        cn = "CN".equals(getApplicationContext().getResources().getConfiguration().locale.getCountry());
     }
 
 
@@ -83,7 +86,7 @@ public class MyApp extends BaseBleApplication {
 
 
     /**
-     * TODO(将所有已创建的Activity加入aList集合中)
+     * (将所有已创建的Activity加入aList集合中)
      */
     public void addActivity(Activity activity) {
 
@@ -93,7 +96,7 @@ public class MyApp extends BaseBleApplication {
     }
 
     /**
-     * TODO(将aList集合中已存在的Activity移除)
+     * (将aList集合中已存在的Activity移除)
      */
     public void deleteActivity(Activity activity) {
         if (compare(activity)) {
@@ -106,8 +109,9 @@ public class MyApp extends BaseBleApplication {
 
     private boolean compare(Activity ch) {
         boolean flag = false;
-        if (aList.contains(ch))
+        if (aList.contains(ch)) {
             flag = true;
+        }
         return flag;
     }
 
@@ -139,24 +143,24 @@ public class MyApp extends BaseBleApplication {
             final String action = intent.getAction();
             if (ACTION_GATT_CONNECTED.equals(action)) {
                 EventBus.getDefault().post(new MsgEvent("KP", false));
-                boolean cn = getApplicationContext().getResources().getConfiguration().locale.getCountry().equals("CN");
+                boolean cn = "CN".equals(getApplicationContext().getResources().getConfiguration().locale.getCountry());
 
                 Handler handler = new Handler();
                 handler.postDelayed(() -> {
-                    /**
-                     *要执行的操作
+                    /*
+                     *要执行的操作  1秒后执行Runnable中的run方法,否则初始化失败
                      */
                     if (cn) {
                         Toast.makeText(getApplicationContext(), "已连接", Toast.LENGTH_LONG).show();
                     } else {
                         Toast.makeText(getApplicationContext(), "Connection", Toast.LENGTH_LONG).show();
                     }
-                }, 1000); //1秒后执行Runnable中的run方法,否则初始化失败
+                }, 1000);
 
                 EventBus.getDefault().post(new MsgEvent("ServiceConnectedStatus", true));
             } else if (ACTION_GATT_DISCONNECTED.equals(action)) {
                 EventBus.getDefault().post(new MsgEvent("ServiceConnectedStatus", false));
-                boolean cn = getApplicationContext().getResources().getConfiguration().locale.getCountry().equals("CN");
+                boolean cn = "CN".equals(getApplicationContext().getResources().getConfiguration().locale.getCountry());
                 if (cn) {
                     Toast.makeText(getApplicationContext(), "已断开", Toast.LENGTH_LONG).show();
                 } else {
@@ -198,7 +202,7 @@ public class MyApp extends BaseBleApplication {
                             mData.setMac(mPK20Data.mac);
                             mData.setName(mPK20Data.name);
                             MyApp.getDaoInstant().getDataDao().insertOrReplace(mData);
-                            boolean cn = getApplicationContext().getResources().getConfiguration().locale.getCountry().equals("CN");
+                            boolean cn = "CN".equals(getApplicationContext().getResources().getConfiguration().locale.getCountry());
                             if (cn) {
                                 EventBus.getDefault().post(new MsgEvent("Save6DataSuccess", "数据存储成功"));
                             } else {
