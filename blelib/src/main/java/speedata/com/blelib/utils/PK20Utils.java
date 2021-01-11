@@ -2,13 +2,19 @@ package speedata.com.blelib.utils;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
+
+import speedata.com.blelib.service.BluetoothLeService;
 
 /**
  * Created by 张明_ on 2017/9/4.
@@ -530,5 +536,64 @@ public class PK20Utils {
             }
         }
         return list;
+    }
+
+    /**
+     * 解析数据并使用广播发送出去
+     *
+     * @param bytes 数据
+     */
+    public static void analysisData(final Context context, final Intent intent, final byte[] bytes) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                switch (bytes[1]) {
+                    case 0x0D:
+                        sendWeightBroadcast(4, context, intent, bytes, BluetoothLeService.NOTIFICATION_DATA_G);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }).start();
+
+    }
+
+    /**
+     * 重量数据发出
+     *
+     * @param length     数据截取长度
+     * @param context    context
+     * @param intent     intent
+     * @param bytes      数据
+     * @param intentName intentName
+     */
+    private static void sendWeightBroadcast(int length, Context context, Intent intent, byte[] bytes, String intentName) {
+        String data = "";
+        byte[] result = new byte[length];
+        try {
+            System.arraycopy(bytes, 3, result, 0, length);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        String byteArrayToString = DataManageUtils.byteArrayToString(result);
+        String fuHao = Objects.requireNonNull(byteArrayToString).substring(0, 2);
+        String weight = byteArrayToString.substring(2, 6);
+//        String xiShu = byteArrayToString.substring(6);
+        BigInteger weightB = new BigInteger(weight, 16);
+//        BigInteger xiShuB = new BigInteger(xiShu, 16);
+        int weightInt = weightB.intValue();
+//        int xiShuInt = xiShuB.intValue();
+        double f1 = (double) weightInt  / 100;
+        BigDecimal b = new BigDecimal(f1);
+        double resultDouble = b.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+        if ("01".equals(fuHao)) {
+            data = "-" + resultDouble;
+        } else {
+            data = resultDouble + "";
+        }
+
+        intent.putExtra(intentName, data);
+        context.sendBroadcast(intent);
     }
 }

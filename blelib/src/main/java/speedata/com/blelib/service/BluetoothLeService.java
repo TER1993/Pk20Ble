@@ -30,6 +30,7 @@ import speedata.com.blelib.bean.PK20Data;
 import speedata.com.blelib.bean.SampleGattAttributes;
 import speedata.com.blelib.utils.ByteUtils;
 import speedata.com.blelib.utils.DataManageUtils;
+import speedata.com.blelib.utils.PK20Utils;
 
 /**
  * Service for managing connection and data communication with a GATT server hosted on a
@@ -59,6 +60,8 @@ public class BluetoothLeService extends Service {
     public final static String NOTIFICATION_DATA_ERR = "com.example.bluetooth.le.NOTIFICATION_DATA_ERR";
 
     public final static String TEST_DATA = "com.example.bluetooth.le.TEST_DATA";
+    public final static String NOTIFICATION_DATA_G = "com.example.bluetooth.le.NOTIFICATION_DATA_G";
+
 
     private boolean mData1 = false;
     private boolean mData2 = false;
@@ -466,6 +469,8 @@ public class BluetoothLeService extends Service {
                 intent.putExtra(NOTIFICATION_DATA_LWH, lwhData);
                 sendBroadcast(intent);
 
+            } else if(data.length == 10 && data[0] == (byte) 0xAA && data[1] == (byte) 0x0D){
+                PK20Utils.analysisData(BluetoothLeService.this, intent, data);
             }
         }
     }

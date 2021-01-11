@@ -182,6 +182,12 @@ public class MyApp extends BaseBleApplication {
                         String test = intent.getStringExtra(BluetoothLeService.TEST_DATA);
                         if (!TextUtils.isEmpty(test)) {
                             EventBus.getDefault().post(new MsgEvent("Test6Data", test));
+
+                        }
+                        String g = intent.getStringExtra(BluetoothLeService.NOTIFICATION_DATA_G);
+                        if (!TextUtils.isEmpty(g)) {
+                            EventBus.getDefault().post(new MsgEvent("G", g));
+
                         } else {
                             String dataERR = intent.getStringExtra(BluetoothLeService.NOTIFICATION_DATA_ERR);
                             if (TextUtils.isEmpty(dataERR)) {

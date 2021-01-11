@@ -70,6 +70,10 @@ public class MenuActivity extends MVPBaseActivity<MenuContract.View, MenuPresent
 
     private ScanInterface scanDecode;
 
+
+    private TextView mTvBarcode;
+    private TextView mTvWeight;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -182,7 +186,11 @@ public class MenuActivity extends MVPBaseActivity<MenuContract.View, MenuPresent
             }
 
         } else if ("Test6Data".equals(type)) {
-            Toast.makeText(MenuActivity.this, (String) msg, Toast.LENGTH_SHORT).show();
+            String string = (String) msg;
+            mTvBarcode.setText(string);
+        } else if ("G".equals(type)) {
+            String string = (String) msg;
+            mTvWeight.setText("G:" + string);
         }
 
     }
@@ -258,6 +266,9 @@ public class MenuActivity extends MVPBaseActivity<MenuContract.View, MenuPresent
         mTvL = findViewById(R.id.tv_l);
         mTvW = findViewById(R.id.tv_w);
         mTvH = findViewById(R.id.tv_h);
+
+        mTvBarcode = findViewById(R.id.tv_barcode);
+        mTvWeight = findViewById(R.id.tv_weight);
 
 
         boolean cn = "CN".equals(getApplicationContext().getResources().getConfiguration().locale.getCountry());
@@ -400,7 +411,6 @@ public class MenuActivity extends MVPBaseActivity<MenuContract.View, MenuPresent
         }
         return super.onKeyDown(keyCode, event);
     }
-
 
 
     private void permission() {
