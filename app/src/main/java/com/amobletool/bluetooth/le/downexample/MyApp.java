@@ -180,12 +180,11 @@ public class MyApp extends BaseBleApplication {
                         EventBus.getDefault().post(new MsgEvent("LWHData", lwh));
                     } else {
                         String test = intent.getStringExtra(BluetoothLeService.TEST_DATA);
+                        String g = intent.getStringExtra(BluetoothLeService.NOTIFICATION_DATA_G);
                         if (!TextUtils.isEmpty(test)) {
                             EventBus.getDefault().post(new MsgEvent("Test6Data", test));
 
-                        }
-                        String g = intent.getStringExtra(BluetoothLeService.NOTIFICATION_DATA_G);
-                        if (!TextUtils.isEmpty(g)) {
+                        } else if (!TextUtils.isEmpty(g)) {
                             EventBus.getDefault().post(new MsgEvent("G", g));
 
                         } else {
@@ -229,7 +228,7 @@ public class MyApp extends BaseBleApplication {
     };
 
 
-    //创建字库
+//创建字库
 //    private void makeWordKu() {
 //        final String[] idStr = {"01", "02", "03", "04", "05", "06", "07", "08", "09", "0A", "0B", "0C", "0D", "0E", "0F",
 //                "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "1A", "1B", "1C", "1D", "1E", "1F",
