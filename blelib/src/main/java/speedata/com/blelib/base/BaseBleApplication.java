@@ -91,6 +91,8 @@ public class BaseBleApplication extends Application {
                     mBluetoothLeService = null;
                     mNotifyCharacteristic3 = null;
                     mNotifyCharacteristic6 = null;
+                    mNotifyCharacteristic5 = null;
+                    mNotifyCharacteristic9 = null;
                     address = null;
                     name = null;
                     unregisterReceiver(mGattUpdateReceiver);
@@ -208,8 +210,52 @@ public class BaseBleApplication extends Application {
                 } else if ("0000fff6-0000-1000-8000-00805f9b34fb".equals(uuid)) {
                     mNotifyCharacteristic6 = gattCharacteristic;
                     setCharacteristicNotification(mNotifyCharacteristic6, true);
+                } else if ("0000ffe5-0000-1000-8000-00805f9b34fb".equals(uuid)) {
+                    mNotifyCharacteristic5 = gattCharacteristic;
+                    setCharacteristicNotification(mNotifyCharacteristic5, true);
+                    Log.d(TAG, "0000ffe5-0000-1000-8000-00805f9b34fb ok");
+                } else if ("0000ffe9-0000-1000-8000-00805f9b34fb".equals(uuid)) {
+                    mNotifyCharacteristic9 = gattCharacteristic;
+                    setCharacteristicNotification(mNotifyCharacteristic9, true);
+                    Log.d(TAG, "0000ffe9-0000-1000-8000-00805f9b34fb ok");
                 }
             }
+        }
+    }
+
+    //===================
+    public static BluetoothGattCharacteristic mNotifyCharacteristic5 = null;
+
+    @SuppressLint("NewApi")
+    public void writeCharacteristic5(String s) {
+        if (mNotifyCharacteristic5 != null) {
+            byte[] data = DataManageUtils.HexString2Bytes(s);//转十六进制
+            mNotifyCharacteristic5.setValue(data);
+            mBluetoothLeService.wirteCharacteristic(mNotifyCharacteristic5);
+            Log.d(TAG, "send5 ok");
+        }
+    }
+
+    public void readCharacteristic5() {
+        if (mNotifyCharacteristic5 != null) {
+            mBluetoothLeService.readCharacteristic(mNotifyCharacteristic5);
+        }
+    }
+
+    public static BluetoothGattCharacteristic mNotifyCharacteristic9 = null;
+
+    @SuppressLint("NewApi")
+    public void writeCharacteristic9(String s) {
+        if (mNotifyCharacteristic9 != null) {
+            mNotifyCharacteristic9.setValue(s);
+            mBluetoothLeService.wirteCharacteristic(mNotifyCharacteristic9);
+            Log.d(TAG, "send9 ok:" + s);
+        }
+    }
+
+    public void readCharacteristic9() {
+        if (mNotifyCharacteristic9 != null) {
+            mBluetoothLeService.readCharacteristic(mNotifyCharacteristic9);
         }
     }
 }

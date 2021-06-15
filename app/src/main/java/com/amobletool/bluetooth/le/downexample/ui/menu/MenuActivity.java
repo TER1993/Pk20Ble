@@ -287,6 +287,13 @@ public class MenuActivity extends MVPBaseActivity<MenuContract.View, MenuPresent
                     .setAnimationSpeed(2)
                     .setDimAmount(0.5f);
         }
+
+        findViewById(R.id.tv_test).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MyApp.getInstance().writeCharacteristic9("11111111");
+            }
+        });
     }
 
 
